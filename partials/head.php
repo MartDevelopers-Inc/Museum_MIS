@@ -13,4 +13,6 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/authentication.css">
     <link rel="stylesheet" href="assets/css/all-themes.css" />
+    <!-- Load Alerts -->
+    <link rel="stylesheet" href="assets/plugins/iziToast/iziToast.min.css">
 </head>

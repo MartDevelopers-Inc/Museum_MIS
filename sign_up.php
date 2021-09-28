@@ -20,15 +20,17 @@ if (isset($_POST['Sign_Up'])) {
         $user_name = $_POST['user_name'];
         $user_email = $_POST['user_email'];
         $user_password = sha1(md5($_POST['user_password']));
+        $user_created_on = date('d M Y');
 
-        $query = 'INSERT INTO users(user_id, user_name, user_email, user_password) VALUES (?,?,?,?)';
+        $query = 'INSERT INTO users(user_id, user_name, user_email, user_password, user_created_on) VALUES (?,?,?,?,?)';
         $stmt = $mysqli->prepare($query);
         $rc = $stmt->bind_param(
-            'ssss',
+            'sssss',
             $user_id,
             $user_name,
             $user_email,
-            $user_password
+            $user_password,
+            $user_created_on
 
         );
         $stmt->execute();
@@ -65,7 +67,6 @@ require_once('partials/head.php');
                             <div class="msg">Register a new membership</div>
                         </h4>
                         <form class="" id="sign_in" method="POST">
-
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <input type="text" name="user_name" required class="form-control">

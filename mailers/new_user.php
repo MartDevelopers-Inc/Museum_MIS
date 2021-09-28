@@ -1,10 +1,10 @@
 <?php
 
-require_once('../config/config.php');
+require_once('config/config.php');
 /* Mailer Configurations */
-require_once('../vendor/phpmailer/phpmailer/src/SMTP.php');
-require_once('../vendor/phpmailer/phpmailer/src/PHPMailer.php');
-require_once('../vendor/phpmailer/phpmailer/src/Exception.php');
+require_once('vendor/phpmailer/phpmailer/src/SMTP.php');
+require_once('vendor/phpmailer/phpmailer/src/PHPMailer.php');
+require_once('vendor/phpmailer/phpmailer/src/Exception.php');
 
 /* Fetch System Setting From DB */
 $ret = "SELECT * FROM settings";
@@ -14,7 +14,7 @@ $res = $stmt->get_result();
 while ($sys = $res->fetch_object()) {
 
     $mail = new PHPMailer\PHPMailer\PHPMailer();
-    $mail->setFrom($sys->mailer_mail_from_email);
+    $mail->setFrom($sys->mailer_from_email);
     $mail->addAddress($user_email);
     $mail->FromName = $sys->name;
     $mail->isHTML(true);
@@ -79,7 +79,7 @@ while ($sys = $res->fetch_object()) {
                                                <b>What you get as a new member</b>
                                                <br>
                                                 Did you know as a  member you are entitled to free entry to all national and regional Museums, prehistoric sites and monuments around Kenya?
-                                                The ' . $sys->name . '. is the custodian of Kenya’s natural and cultural heritage that manages Kenyan Heritage Artefacts.
+                                                The ' . $sys->name . ' is the custodian of Kenya’s natural and cultural heritage that manages Kenyan Heritage Artefacts.
                                                <br>
                                                  Kind Regards
                                                <br>
