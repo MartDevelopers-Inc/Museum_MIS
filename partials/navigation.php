@@ -55,7 +55,7 @@ while ($sys = $res->fetch_object()) {
             <div class="col-12">
                 <div class="navbar-header">
                     <a href="javascript:void(0);" class="bars"></a>
-                    <a class="navbar-brand" href=""><?php echo $sys->name; ?> MIS</a>
+                    <a class="navbar-brand" href="dashboard"><?php echo $sys->name; ?> MIS</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout" class="mega-menu" data-close="true"><i class="zmdi zmdi-power"></i></a></li>

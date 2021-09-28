@@ -19,10 +19,8 @@ if (isset($_POST['Sign_In'])) {
     /* Manage Access Levels */
     if ($rs && $user_access_level == 'Member') {
         header("location:home");
-    } else if ($rs && $user_access_level == 'Staff') {
+    } else if (($rs && $user_access_level == 'Staff') || ($rs && $user_access_level == 'Administrator')) {
         header("location:dashboard");
-    } elseif ($rs && $user_access_level == 'Adminstrator') {
-        header("location:admin_dashboard");
     } else {
         $err = "Incorrrect Email Or Password";
     }
