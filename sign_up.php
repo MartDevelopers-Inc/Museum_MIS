@@ -48,7 +48,7 @@ require_once('partials/head.php');
                             <div class="text-left">
                                 <button type="submit" name="Sign_Up" class="btn btn-raised waves-effect bg-red">SIGN UP</button>
                             </div>
-                            <div class="m-t-10 m-b--5"> <a href="login">You already have a membership?</a> </div>
+                            <div class="m-t-10 m-b--5"> <a href="login">I already have a membership?</a> </div>
                         </form>
                     </div>
                 </div>
