@@ -75,15 +75,15 @@
         ?>
             <ul class="list">
                 <li> <a href="home"><i class="zmdi zmdi-home"></i><span>Dashboard</span> </a> </li>
-                <li> <a href="profile"><i class="zmdi zmdi-nature_people"></i><span>My Profile</span> </a> </li>
-                <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-email"></i><span>Memberships</span> </a>
+                <li> <a href="profile"><i class="zmdi zmdi-account-box"></i><span>My Profile</span> </a> </li>
+                <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts-list"></i><span>Memberships</span> </a>
                     <ul class="ml-menu">
                         <li><a href="membership_packages">Packages</a></li>
                     </ul>
                 </li>
-                <li><a href="reservations"><i class="zmdi zmdi-nature_people"></i><span>Reservations</span> </a> </li>
-                <li><a href="events"><i class="zmdi zmdi-nature_people"></i><span>Events</span> </a> </li>
-                <li><a href="payments"><i class="zmdi zmdi-nature_people"></i><span>Payments</span> </a> </li>
+                <li><a href="reservations"><i class="zmdi zmdi-calendar-check"></i><span>Reservations</span> </a> </li>
+                <li><a href="events"><i class="zmdi zmdi-alarm-check"></i><span>Events</span> </a> </li>
+                <li><a href="payments"><i class="zmdi zmdi-money-box"></i><span>Payments</span> </a> </li>
             </ul>
 
         <?php } ?>
