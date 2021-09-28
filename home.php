@@ -35,11 +35,11 @@ require_once('partials/head.php');
         </li>
     </ul>
     <!-- Search  -->
-    <div class="search-bar">
+    <!-- <div class="search-bar">
         <div class="search-icon"> <i class="zmdi zmdi-search"></i> </div>
         <input type="text" placeholder="Search...">
         <div class="close-search"> <i class="zmdi zmdi-close"></i> </div>
-    </div>
+    </div> -->
     <!-- Top Bar -->
     <?php require_once('partials/navigation.php'); ?>
     <!-- Left Sidebar -->
@@ -53,8 +53,8 @@ require_once('partials/head.php');
                     <div class="col-lg-12 col-md-6 col-sm-7">
                         <h2>Dashboard</h2>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Dashboard 1</li>
+                            <li class="breadcrumb-item"><a href="dashboard">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
                         </ul>
                     </div>
                 </div>
