@@ -1,4 +1,33 @@
 <?php
+session_start();
+require_once('config/config.php');
+/* Initiate Login */
+if (isset($_POST['Sign_In'])) {
+    $user_email = $_POST['user_email'];
+    $trimmed_password = trim($_POST['user_password']);
+    $password = (sha1(md5($trimmed_password)));
+
+    $stmt = $mysqli->prepare("SELECT user_email, user_password, user_access_level, user_id  FROM users  WHERE  (user_email =? AND user_password =?) ");
+    $stmt->bind_param('ss', $user_email, $password);
+    $stmt->execute();
+    $stmt->bind_result($suer_email, $password, $user_access_level,  $id);
+    $rs = $stmt->fetch();
+    $_SESSION['user_id'] = $id;
+    $_SESSION['user_email'] = $email;
+    $_SESSION['user_access_level'] = $user_access_level;
+
+    /* Manage Access Levels */
+    if ($rs && $user_access_level == 'Member') {
+        header("location:home");
+    } else if ($rs && $user_access_level == 'Staff') {
+        header("location:dashboard");
+    } elseif ($rs && $user_access_level == 'Adminstrator') {
+        header("location:admin_dashboard");
+    } else {
+        $err = "Incorrrect Email Or Password";
+    }
+}
+
 require_once('partials/head.php');
 ?>
 

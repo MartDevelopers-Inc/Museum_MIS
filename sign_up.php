@@ -21,16 +21,18 @@ if (isset($_POST['Sign_Up'])) {
         $user_email = $_POST['user_email'];
         $user_password = sha1(md5($_POST['user_password']));
         $user_created_on = date('d M Y');
+        $user_access_level = 'Member';
 
-        $query = 'INSERT INTO users(user_id, user_name, user_email, user_password, user_created_on) VALUES (?,?,?,?,?)';
+        $query = 'INSERT INTO users(user_id, user_name, user_email, user_password, user_created_on, user_access_level) VALUES (?,?,?,?,?,?)';
         $stmt = $mysqli->prepare($query);
         $rc = $stmt->bind_param(
-            'sssss',
+            'ssssss',
             $user_id,
             $user_name,
             $user_email,
             $user_password,
-            $user_created_on
+            $user_created_on,
+            $user_access_level
 
         );
         $stmt->execute();
