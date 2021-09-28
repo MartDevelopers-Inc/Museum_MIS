@@ -1,4 +1,47 @@
 <?php
+require_once('config/config.php');
+require_once('config/codeGen.php');
+
+/* Sign Up */
+if (isset($_POST['Sign_Up'])) {
+
+    /* Prevent Double Entry */
+    $user_email = $_POST['user_email'];
+    $sql = "SELECT * FROM  users  WHERE  user_email = '$user_email' ";
+    $res = mysqli_query($mysqli, $sql);
+
+    if (mysqli_num_rows($res) > 0) {
+        $row = mysqli_fetch_assoc($res);
+        if ($user_email == $row['user_email']) {
+            $err = 'Account With This Email  Already Exists';
+        }
+    } else {
+        $user_id = $sys_gen_id;
+        $user_name = $_POST['user_name'];
+        $user_email = $_POST['user_email'];
+        $user_password = sha1(md5($_POST['user_password']));
+
+        $query = 'INSERT INTO users(user_id, user_name, user_email, user_password) VALUES (?,?,?,?)';
+        $stmt = $mysqli->prepare($query);
+        $rc = $stmt->bind_param(
+            'ssss',
+            $user_id,
+            $user_name,
+            $user_email,
+            $user_password
+
+        );
+        $stmt->execute();
+        /* Mail User */
+        require_once('mailers/new_user.php');
+        if ($stmt && $mail->send()) {
+            $success = "Account Created, Kindly Proceed To Sign In";
+        } else {
+            $err = 'Please Try Again Or Try Later';
+        }
+    }
+}
+
 require_once('partials/head.php');
 ?>
 

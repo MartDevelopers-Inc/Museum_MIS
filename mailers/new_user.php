@@ -7,7 +7,7 @@ require_once('../vendor/phpmailer/phpmailer/src/PHPMailer.php');
 require_once('../vendor/phpmailer/phpmailer/src/Exception.php');
 
 /* Fetch System Setting From DB */
-$ret = "SELECT * FROM `settings`";
+$ret = "SELECT * FROM settings";
 $stmt = $mysqli->prepare($ret);
 $stmt->execute(); //ok
 $res = $stmt->get_result();
@@ -84,7 +84,7 @@ while ($sys = $res->fetch_object()) {
                                                  Kind Regards
                                                <br>
                                                <b>' . $sys->name . ' </b> <br>
-                                               <i>Preserving Kenyan`s natural and cultural heritage</i>
+                                               <i>' . $sys->tagline . '</i>
                                             </p>
                                         </td>
                                     </tr>
