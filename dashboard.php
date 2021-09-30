@@ -118,12 +118,25 @@ require_once('partials/head.php');
                                     </tr>
                                 </thead>
                                 <tbody class="no-border-x">
-                                    <tr>
-                                        <td>Sony Xperia M4</td>
-                                        <td class="number">$149</td>
-                                        <td>Aug 23, 2016</td>
-                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
-                                    </tr>
+                                    <?php
+                                    $ret = "SELECT * FROM  reservations r
+                                    INNER JOIN users u ON r.reservation_user_id  = u.user_id";
+                                    $stmt = $mysqli->prepare($ret);
+                                    $stmt->execute(); //ok
+                                    $res = $stmt->get_result();
+                                    while ($reservations = $res->fetch_object()) {
+                                    ?>
+                                        <tr>
+                                            <td>
+                                                Name : <?php echo $reservations->user_name; ?><br>
+                                                Phone : <?php echo $reservations->user_phone; ?><br>
+                                                Email : <?php echo $reservations->user_email; ?>
+                                            </td>
+                                            <td class="number"><?php echo $reservations->reservation_date; ?></td>
+                                            <td><?php echo $reservations->reservation_payment_status; ?></td>
+                                            <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -142,19 +155,46 @@ require_once('partials/head.php');
                                     <tr>
                                         <th style="width:40%;">Member Details</th>
                                         <th class="number">Accomodations Dates</th>
-                                        <th style="width:20%;">Room Type</th>
+                                        <th style="width:20%;">Room Details</th>
                                         <th style="width:20%;">Payment Status</th>
                                         <th style="width:5%;" class="actions"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="no-border-x">
-                                    <tr>
-                                        <td>Sony Xperia M4</td>
-                                        <td class="number">$149</td>
-                                        <td>Aug 23, 2016</td>
-                                        <td class="text-success">Completed</td>
-                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
-                                    </tr>
+                                    <?php
+                                    $ret = "SELECT * FROM  accomodations a
+                                    INNER JOIN users u ON a.accomodation_id  = u.user_id 
+                                    INNER JOIN rooms ro ON r.room_id = a.accomodation_room_id";
+                                    $stmt = $mysqli->prepare($ret);
+                                    $stmt->execute(); //ok
+                                    $res = $stmt->get_result();
+                                    while ($reservations = $res->fetch_object()) {
+                                    ?>
+                                        <tr>
+                                            <td>
+                                                Name : <?php echo $reservations->user_name; ?><br>
+                                                Phone : <?php echo $reservations->user_phone; ?><br>
+                                                Email : <?php echo $reservations->user_email; ?>
+                                            </td>
+                                            <td>
+                                                Check In:<?php echo $reservations->accomodation_check_indate; ?><br>
+                                                Check Out: <?php echo $reservations->accomodation_check_out_date; ?>
+                                            </td>
+                                            <td>
+                                                No: <?php echo $reservations->room_number; ?><br>
+                                                Type: <?php echo $reservations->room_type; ?>
+                                            </td>
+                                            <?php
+                                            if ($reservations->accomodation_payment_status == 'Paid') {
+                                            ?>
+                                                <td class="text-success">Paid</td>
+                                            <?php } else {
+                                            ?>
+                                                <td class="text-success">Pending</td>
+                                            <?php } ?>
+                                            <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
