@@ -2,7 +2,40 @@
 session_start();
 require_once('config/config.php');
 require_once('config/checklogin.php');
+require_once('config/codeGen.php');
 checklogin();
+/* Add Staff */
+if (isset($_POST['Add_Staff'])) {
+    $user_id = $sys_gen_id;
+    $user_name = $_POST['user_name'];
+    $user_phone = $_POST['user_phone'];
+    $user_password = sha1(md5($_POST['user_password']));
+    $user_email = $_POST['user_email'];
+    $user_idno = $_POST['user_idno'];
+    $user_access_level = $_POST['user_access_level'];
+    $user_created_on = date('d, M Y');
+
+    /* Prevent Double Entries */
+    $sql = "SELECT * FROM  users WHERE user_email = '$user_email' || user_phone = '$user_phone'   ";
+    $res = mysqli_query($mysqli, $sql);
+    if (mysqli_num_rows($res) > 0) {
+        $row = mysqli_fetch_assoc($res);
+        if ($user_email == $row['user_email'] || $user_phone == $row['user_phone']) {
+            $err =  "Email Or Phone Number Already Exists";
+        }
+    } else {
+        $query = "INSERT INTO users(user_id, user_name, user_phone, user_password, user_email, user_idno, user_access_level, user_created_on) VALUES(?,?,?,?,?,?,?,?)";
+        $stmt = $mysqli->prepare($query);
+        $rc = $stmt->bind_param('ssssssss', $user_id, $user_name, $user_phone, $user_password, $user_email, $user_idno, $user_access_level, $user_created_on);
+        $stmt->execute();
+        if ($stmt) {
+            $success = "$user_name Added";
+        } else {
+            $info = "Please Try Again Or Try Later";
+        }
+    }
+}
+/* Delete Staff */
 require_once('partials/head.php');
 ?>
 
@@ -588,8 +621,8 @@ require_once('partials/head.php');
                                 <div class="form-group">
                                     <div class="demo-switch">
                                         <div class="switch">
-                                            <label>Give Administrator Previledges 
-                                                <input type="checkbox"  name="user_access_level">
+                                            <label>Give Administrator Previledges
+                                                <input type="checkbox" name="user_access_level">
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
