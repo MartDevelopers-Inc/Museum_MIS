@@ -49,7 +49,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Reservations</span>
-                                    <span class="value">1,305</span>
+                                    <span class="value"><?php echo $reservations; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +64,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Events</span>
-                                    <span class="value">2,105</span>
+                                    <span class="value"><?php echo $events; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -78,8 +78,8 @@ require_once('partials/head.php');
                                     <i class="zmdi zmdi-label zmdi-hc-2x"></i>
                                 </div>
                                 <div class="media-text">
-                                    <span class="title">Tickets</span>
-                                    <span class="value">4,054</span>
+                                    <span class="title">Purchased Tickets</span>
+                                    <span class="value"><?php echo $tickets; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Expenditure</span>
-                                    <span class="value">$63.23M</span>
+                                    <span class="value">Ksh <?php echo $expenditure; ?></span>
                                 </div>
                             </div>
                         </div>

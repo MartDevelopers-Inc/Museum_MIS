@@ -39,12 +39,11 @@ if ($_SESSION['user_access_level'] == 'Staff' || $_SESSION['user_access_level'] 
 } else {
     $user_id = $_SESSION['user_id'];
     /* Load Member Analytics */
-
     /* 1. Member Bookings */
     $query = "SELECT COUNT(*)  FROM `reservations`  WHERE reservation_user_id = '$user_id' ";
     $stmt = $mysqli->prepare($query);
     $stmt->execute();
-    $stmt->bind_result($bookings);
+    $stmt->bind_result($reservations);
     $stmt->fetch();
     $stmt->close();
 
@@ -71,7 +70,7 @@ if ($_SESSION['user_access_level'] == 'Staff' || $_SESSION['user_access_level'] 
     $query = "SELECT SUM(payment_amount)  FROM `payments`  WHERE payment_user_id  = '$user_id' ";
     $stmt = $mysqli->prepare($query);
     $stmt->execute();
-    $stmt->bind_result($revenue);
+    $stmt->bind_result($expenditure);
     $stmt->fetch();
     $stmt->close();
 }
