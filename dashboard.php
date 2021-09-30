@@ -164,7 +164,7 @@ require_once('partials/head.php');
                                     <?php
                                     $ret = "SELECT * FROM  accomodations a
                                     INNER JOIN users u ON a.accomodation_id  = u.user_id 
-                                    INNER JOIN rooms ro ON r.room_id = a.accomodation_room_id";
+                                    INNER JOIN rooms r ON r.room_id = a.accomodation_room_id";
                                     $stmt = $mysqli->prepare($ret);
                                     $stmt->execute(); //ok
                                     $res = $stmt->get_result();
