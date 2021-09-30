@@ -22,5 +22,10 @@ while ($sys = $res->fetch_object()) {
         <link rel="stylesheet" href="assets/css/all-themes.css" />
         <!-- Load Alerts -->
         <link rel="stylesheet" href="assets/plugins/iziToast/iziToast.min.css">
+        <!-- JQuery DataTable Css -->
+        <link rel="stylesheet" href="assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+        <!-- Bootstrap Select Css -->
+        <link rel="stylesheet" href="assets/plugins/bootstrap-select/css/bootstrap-select.css">
+
     </head>
 <?php } ?>
