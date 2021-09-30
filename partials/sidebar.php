@@ -43,7 +43,7 @@
                 </li>
                 <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>Bookings</span> </a>
                     <ul class="ml-menu">
-                        <li> <a href="modules_bookings_rooms">Rooms</a></li>
+                        <li> <a href="modules_bookings_reservations">Rooms</a></li>
                         <li> <a href="modules_bookings_reservations">Reservations</a></li>
                         <li> <a href="modules_bookings_accomodations">Accomodations</a></li>
                     </ul>
