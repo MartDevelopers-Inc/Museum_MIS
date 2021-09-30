@@ -45,7 +45,7 @@ require_once('partials/head.php');
                         <div class="body">
                             <div class="media">
                                 <div class="media-icon bg-cyan">
-                                    <i class="zmdi zmdi-shopping-basket zmdi-hc-2x"></i>
+                                    <i class="zmdi zmdi-accounts-outline zmdi-hc-2x"></i>
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Members</span>
@@ -111,10 +111,9 @@ require_once('partials/head.php');
                             <table class="table table-striped table-borderless m-b-5">
                                 <thead>
                                     <tr>
-                                        <th style="width:40%;">Product</th>
-                                        <th class="number">Price</th>
-                                        <th style="width:20%;">Date</th>
-                                        <th style="width:20%;">State</th>
+                                        <th style="width:40%;">Member Details</th>
+                                        <th class="number">Booking Date</th>
+                                        <th style="width:20%;">Booking Payment</th>
                                         <th style="width:5%;" class="actions"></th>
                                     </tr>
                                 </thead>
@@ -123,8 +122,7 @@ require_once('partials/head.php');
                                         <td>Sony Xperia M4</td>
                                         <td class="number">$149</td>
                                         <td>Aug 23, 2016</td>
-                                        <td class="text-success">Completed</td>
-                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-plus-circle-o"></i></a></td>
+                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -142,10 +140,10 @@ require_once('partials/head.php');
                             <table class="table table-striped table-borderless m-b-5">
                                 <thead>
                                     <tr>
-                                        <th style="width:40%;">Product</th>
-                                        <th class="number">Price</th>
-                                        <th style="width:20%;">Date</th>
-                                        <th style="width:20%;">State</th>
+                                        <th style="width:40%;">Member Details</th>
+                                        <th class="number">Accomodations Dates</th>
+                                        <th style="width:20%;">Room Type</th>
+                                        <th style="width:20%;">Payment Status</th>
                                         <th style="width:5%;" class="actions"></th>
                                     </tr>
                                 </thead>
@@ -155,7 +153,7 @@ require_once('partials/head.php');
                                         <td class="number">$149</td>
                                         <td>Aug 23, 2016</td>
                                         <td class="text-success">Completed</td>
-                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-plus-circle-o"></i></a></td>
+                                        <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
                                     </tr>
                                 </tbody>
                             </table>
