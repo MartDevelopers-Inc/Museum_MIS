@@ -49,7 +49,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Members</span>
-                                    <span class="value">1,305</span>
+                                    <span class="value"><?php echo $members; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +64,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Staffs</span>
-                                    <span class="value">2,105</span>
+                                    <span class="value"><?php echo $staffs; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +79,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Bookings</span>
-                                    <span class="value">4,054</span>
+                                    <span class="value"><?php echo $bookings; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="media-text">
                                     <span class="title">Total Revenue</span>
-                                    <span class="value">$63.23M</span>
+                                    <span class="value">Ksh <?php echo $revenue; ?></span>
                                 </div>
                             </div>
                         </div>
