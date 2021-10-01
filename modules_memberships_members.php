@@ -197,7 +197,7 @@ require_once('partials/head.php');
                                     <div class="form-group">
                                         <label>Select Package Name</label>
                                         <div class="form-line">
-                                            <select name="user_membership_package_package_id" class="form control">
+                                            <select name="user_membership_package_package_id" class="form-control show-tick">
                                                 <?php
                                                 $ret = "SELECT * FROM membership_packages  ";
                                                 $stmt = $mysqli->prepare($ret);
