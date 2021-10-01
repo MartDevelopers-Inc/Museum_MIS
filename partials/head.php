@@ -28,5 +28,7 @@ while ($sys = $res->fetch_object()) {
         <link rel="stylesheet" href="assets/plugins/bootstrap-select/css/bootstrap-select.css">
         <!-- Bootstrap Select Css -->
         <link href="assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+        <!-- Wait Me Css -->
+        <link rel="stylesheet" href="assets/plugins/waitme/waitMe.css" />
     </head>
 <?php } ?>
