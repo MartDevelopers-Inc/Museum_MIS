@@ -23,7 +23,6 @@ if (isset($_POST['Update_Package'])) {
     }
 }
 
-
 require_once('partials/head.php');
 ?>
 
@@ -57,7 +56,7 @@ require_once('partials/head.php');
                             <h2><?php echo $packages->package_name; ?> Membership Package</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="modules_hrm">Membership Packages</a></li>
+                                <li class="breadcrumb-item"><a href="modules_memberships_packages">Membership Packages</a></li>
                                 <li class="breadcrumb-item active"><?php echo $packages->package_name; ?></li>
                             </ul>
                         </div>
@@ -85,7 +84,6 @@ require_once('partials/head.php');
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#package_settings">Update Membership Package</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#subscribed_members">Subscribed Members</a></li>
-
                                     <?php
                                     $user_access_level = $_SESSION['user_access_level'];
                                     /* Only Show This If Access Level Is Admin */
@@ -139,7 +137,44 @@ require_once('partials/head.php');
 
                                     <div role="tabpanel" class="tab-pane" id="subscribed_members">
                                         <div class="wrap-reset">
-
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Phone Number</th>
+                                                                <th>Email Adr</th>
+                                                                <th>ID Number</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $ret = "SELECT * FROM user_membership_package ump
+                                                            INNER JOIN users u ON u.user_id = ump.user_membership_package_user_id
+                                                            WHERE ump.user_membership_package_package_id = '$view'
+                                                            ";
+                                                            $stmt = $mysqli->prepare($ret);
+                                                            $stmt->execute(); //ok
+                                                            $res = $stmt->get_result();
+                                                            while ($members = $res->fetch_object()) {
+                                                            ?>
+                                                                <tr>
+                                                                    <td>
+                                                                        <a href="modules_memberships_member?view=<?php echo $members->user_id; ?>">
+                                                                            <?php echo $members->user_name; ?>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td><?php echo $members->user_phone; ?></td>
+                                                                    <td><?php echo $members->user_email; ?></td>
+                                                                    <td><?php echo $members->user_idno; ?></td>
+                                                                </tr>
+                                                            <?php
+                                                            } ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
