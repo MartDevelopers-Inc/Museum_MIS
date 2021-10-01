@@ -5,7 +5,7 @@ require_once('config/checklogin.php');
 checklogin();
 
 /* Update Profile */
-if (isset($_POST['Sign_Up'])) {
+if (isset($_POST['Update_Account'])) {
     $user_id = $_POST['user_id'];
     $user_name = $_POST['user_name'];
     $user_email = $_POST['user_email'];
@@ -24,7 +24,7 @@ if (isset($_POST['Sign_Up'])) {
     );
     $stmt->execute();
     if ($stmt) {
-        $success = $user_name . 'Account Updated';
+        $success = $user_name . ' Account Updated';
     } else {
         $err = 'Please Try Again Or Try Later';
     }
@@ -32,6 +32,30 @@ if (isset($_POST['Sign_Up'])) {
 
 
 /* Change Password */
+if (isset($_POST['Update_Password'])) {
+    $user_id = $_POST['user_id'];
+    $new_password = sha1(md5($_POST['new_password']));
+    $confirm_password = sha1(md5($_POST['confirm_password']));
+
+    /* Check if passwords match */
+    if ($new_password != $confirm_password) {
+        $err = "Passwords Does Not Match";
+    } else {
+        $query = 'UPDATE  users SET user_password =? WHERE user_id =?';
+        $stmt = $mysqli->prepare($query);
+        $rc = $stmt->bind_param(
+            'ss',
+            $confirm_password,
+            $user_id
+        );
+        $stmt->execute();
+        if ($stmt) {
+            $success = 'Password Updated';
+        } else {
+            $err = 'Please Try Again Or Try Later';
+        }
+    }
+}
 
 /* Delete Account */
 
@@ -76,7 +100,7 @@ require_once('partials/head.php');
                             <h2><?php echo $hrm->user_name; ?> Profile</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="dashboard">HRM</a></li>
+                                <li class="breadcrumb-item"><a href="modules_hrm">HRM</a></li>
                                 <li class="breadcrumb-item active">Profile</li>
                             </ul>
                         </div>
@@ -93,6 +117,7 @@ require_once('partials/head.php');
                                     <span class="">Email: <?php echo $hrm->user_email;  ?></span><br>
                                     <span class="">Contacts: <?php echo $hrm->user_phone;  ?></span><br>
                                     <span class="">ID No: <?php echo $hrm->user_idno;  ?></span><br>
+                                    <span class="">Access Level: <?php echo $hrm->user_access_level;  ?></span><br>
                                 </div>
                             </div>
                         </div>
@@ -128,6 +153,8 @@ require_once('partials/head.php');
                                                                 <label>Full Name</label>
                                                                 <div class="form-line">
                                                                     <input type="text" name="user_name" value="<?php echo $hrm->user_name; ?>" required class="form-control" />
+                                                                    <!-- Hide This -->
+                                                                    <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
                                                                 </div>
                                                             </div>
                                                         </div>
