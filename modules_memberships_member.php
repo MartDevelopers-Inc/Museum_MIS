@@ -77,7 +77,10 @@ require_once('partials/head.php');
     <?php
     require_once('partials/sidebar.php');
     $view = $_GET['view'];
-    $ret = "SELECT * FROM users WHERE user_id = '$view'";
+    $ret = "SELECT * FROM users s
+     INNER JOIN user_membership_package  ump ON s.user_id = ump.user_membership_package_user_id
+     INNER JOIN membership_packages mp ON mp.package_id = ump.user_membership_package_package_id
+     WHERE s.user_id = '$view'";
     $stmt = $mysqli->prepare($ret);
     $stmt->execute(); //ok
     $res = $stmt->get_result();
@@ -115,6 +118,9 @@ require_once('partials/head.php');
                                     <span class="">Email: <?php echo $hrm->user_email;  ?></span><br>
                                     <span class="">Contacts: <?php echo $hrm->user_phone;  ?></span><br>
                                     <span class="">ID No: <?php echo $hrm->user_idno;  ?></span><br>
+                                    <span class="">Membership Package: <?php echo $hrm->package_name;  ?></span><br>
+                                    <span class="">Package Rate: Ksh <?php echo $hrm->package_pricing;  ?></span><br>
+                                    <span class="">Member Since : <?php echo $hrm->user_created_on;  ?></span><br>
                                 </div>
                             </div>
                         </div>
@@ -226,16 +232,20 @@ require_once('partials/head.php');
                                                 <div class="row clearfix">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <select name="user_access_level" class="form-control show-tick">
-                                                                <?php
-                                                                if ($hrm->user_access_level == 'Staff') {
-                                                                ?>
-                                                                    <option value="Administrator">Administrator</option>
-                                                                <?php } else {
-                                                                ?>
-                                                                    <option value="Staff">Staff</option>
-                                                                <?php } ?>
-                                                            </select>
+                                                            <label>Select Membership Package Name</label>
+                                                            <div class="form-line">
+                                                                <select name="user_membership_package_package_id" class="form-control show-tick">
+                                                                    <?php
+                                                                    $ret = "SELECT * FROM membership_packages  ";
+                                                                    $stmt = $mysqli->prepare($ret);
+                                                                    $stmt->execute(); //ok
+                                                                    $res = $stmt->get_result();
+                                                                    while ($package = $res->fetch_object()) {
+                                                                    ?>
+                                                                        <option value="<?php echo $package->package_id; ?>"><?php echo $package->package_name; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                         <!-- Hide This -->
                                                         <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
@@ -243,7 +253,7 @@ require_once('partials/head.php');
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="submit" name="Update_Access_Level" class="btn btn-link waves-effect">SAVE CHANGES</button>
+                                                <button type="submit" name="Update_Membership" class="btn btn-link waves-effect">SAVE CHANGES</button>
                                             </div>
                                         </form>
                                     </div>
