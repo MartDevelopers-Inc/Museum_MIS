@@ -36,6 +36,19 @@ if (isset($_POST['Add_Staff'])) {
     }
 }
 /* Delete Staff */
+if (isset($_GET['delete'])) {
+    $delete = $_GET['delete'];
+    $adn = "DELETE FROM users WHERE user_id=?";
+    $stmt = $mysqli->prepare($adn);
+    $stmt->bind_param('s', $delete);
+    $stmt->execute();
+    $stmt->close();
+    if ($stmt) {
+        $success = "Deleted" && header("refresh:1; url=modules_hrm");
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
 require_once('partials/head.php');
 ?>
 
