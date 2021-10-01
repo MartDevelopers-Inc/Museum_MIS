@@ -38,15 +38,19 @@ if (isset($_POST['Add_Staff'])) {
 /* Delete Staff */
 if (isset($_GET['delete'])) {
     $delete = $_GET['delete'];
+    /* Log Staff Out If They Delete Their Account */
+    $user_id = $_SESSION['user_id'];
     $adn = "DELETE FROM users WHERE user_id=?";
     $stmt = $mysqli->prepare($adn);
     $stmt->bind_param('s', $delete);
     $stmt->execute();
     $stmt->close();
-    if ($stmt) {
+    if ($stmt && ($user_id == $delete)) {
+        $success = "Deleted" && header("refresh:1; url=logout");
+    } else if ($stmt && $user_id != $delete) {
         $success = "Deleted" && header("refresh:1; url=modules_hrm");
     } else {
-        $info = "Please Try Again Or Try Later";
+        $err = "Please Try Again Later";
     }
 }
 require_once('partials/head.php');
