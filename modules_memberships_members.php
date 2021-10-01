@@ -15,6 +15,7 @@ if (isset($_POST['Add_Member'])) {
     $user_idno = $_POST['user_idno'];
     $user_access_level = 'Member';
     $user_created_on = date('d, M Y');
+    $user_membership_package_package_id = $_POST['user_membership_package_package_id'];
 
     /* Prevent Double Entries */
     $sql = "SELECT * FROM  users WHERE user_email = '$user_email' || user_phone = '$user_phone'   ";
@@ -26,10 +27,18 @@ if (isset($_POST['Add_Member'])) {
         }
     } else {
         $query = "INSERT INTO users(user_id, user_name, user_phone, user_password, user_email, user_idno, user_access_level, user_created_on) VALUES(?,?,?,?,?,?,?,?)";
+        $query1 = "INSERT INTO user_membership_package (user_membership_package_user_id, user_membership_package_package_id) VALUES(?,?)";
+
         $stmt = $mysqli->prepare($query);
+        $stmt1 = $mysqli->prepare($query1);
+
         $rc = $stmt->bind_param('ssssssss', $user_id, $user_name, $user_phone, $user_password, $user_email, $user_idno, $user_access_level, $user_created_on);
+        $rc = $stmt1->bind_param('ss', $user_id, $user_membership_package_package_id);
+
         $stmt->execute();
-        if ($stmt) {
+        $stmt1->execute();
+
+        if ($stmt && $stmt1) {
             $success = "$user_name Added";
         } else {
             $info = "Please Try Again Or Try Later";
