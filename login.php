@@ -13,7 +13,7 @@ if (isset($_POST['Sign_In'])) {
     $stmt->bind_result($suer_email, $password, $user_access_level,  $id);
     $rs = $stmt->fetch();
     $_SESSION['user_id'] = $id;
-    $_SESSION['user_email'] = $email;
+    $_SESSION['user_email'] = $user_email;
     $_SESSION['user_access_level'] = $user_access_level;
 
     /* Manage Access Levels */
