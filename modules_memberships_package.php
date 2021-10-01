@@ -6,32 +6,23 @@ require_once('config/codeGen.php');
 checklogin();
 
 /* Membership Package */
-if (isset($_POST['Add_Package'])) {
-    $package_id = $sys_gen_id;
+if (isset($_POST['Update_Package'])) {
+    $package_id = $_POST['package_id'];
     $package_name = $_POST['package_name'];
     $package_details = $_POST['package_details'];
     $package_pricing = $_POST['package_pricing'];
 
-    /* Prevent Double Entries */
-    $sql = "SELECT * FROM  membership_packages WHERE package_name = '$package_name'";
-    $res = mysqli_query($mysqli, $sql);
-    if (mysqli_num_rows($res) > 0) {
-        $row = mysqli_fetch_assoc($res);
-        if ($package_name == $row['package_name']) {
-            $err =  "Package Name Already Exists";
-        }
+    $query = "UPDATE  membership_packages SET package_pricing =?,  package_name =?, package_details=? WHERE package_id = ?";
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param('ssss', $package_pricing, $package_name, $package_details, $package_id);
+    $stmt->execute();
+    if ($stmt) {
+        $success = "$package_name Membership Package Updated";
     } else {
-        $query = "INSERT INTO membership_packages (package_id, package_pricing,  package_name, package_details) VALUES(?,?,?,?)";
-        $stmt = $mysqli->prepare($query);
-        $rc = $stmt->bind_param('ssss', $package_id, $package_pricing, $package_name, $package_details);
-        $stmt->execute();
-        if ($stmt) {
-            $success = "$package_name Added";
-        } else {
-            $info = "Please Try Again Or Try Later";
-        }
+        $info = "Please Try Again Or Try Later";
     }
 }
+
 
 require_once('partials/head.php');
 ?>
@@ -63,7 +54,7 @@ require_once('partials/head.php');
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-7">
-                            <h2><?php echo $packages->package_name; ?> Membership Packages</h2>
+                            <h2><?php echo $packages->package_name; ?> Membership Package</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
                                 <li class="breadcrumb-item"><a href="modules_hrm">Membership Packages</a></li>
@@ -106,7 +97,47 @@ require_once('partials/head.php');
 
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="subscribed_members">
+                                    <div role="tabpanel" class="tab-pane active" id="package_settings">
+                                        <div class="wrap-reset">
+                                            <form method="POST">
+                                                <div class="modal-body">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Package Name</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" name="package_name" value="<?php echo $packages->package_name; ?>" required class="form-control" />
+                                                                    <!-- Hide This -->
+                                                                    <input type="hidden" name="package_id" value="<?php echo $packages->package_id; ?>" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Package Subscription Fee (Ksh)</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" value="<?php echo $packages->package_pricing; ?>" name="package_pricing" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Package Details</label>
+                                                                <div class="form-line">
+                                                                    <textarea type="text" rows="5" name="package_details" class="form-control no-resize auto-growth" required /><?php echo $packages->package_details; ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="Update_Package" class="btn btn-link waves-effect">SAVE </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="subscribed_members">
                                         <div class="wrap-reset">
 
                                         </div>
@@ -114,19 +145,15 @@ require_once('partials/head.php');
 
                                     <div role="tabpanel" class="tab-pane" id="delete_package">
                                         <div class="row clearfix">
-                                            <div class="modal-body">
-                                                <div class="row clearfix">
-                                                    <br>
-                                                    <h2 class="card-inside-title  text-danger text-center">
-                                                        Heads Up!, you are about to delete <?php echo $packages->package_name; ?> membership package
-                                                    </h2>
-                                                </div>
-                                            </div>
-
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Package</button>
+                                        <div class="d-flex justify-content-center">
+                                            <h2 class="card-inside-title  text-danger text-center">
+                                                Heads Up!, you are about to delete <?php echo $packages->package_name; ?> membership package <br>
+                                            </h2>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Package</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,9 +173,9 @@ require_once('partials/head.php');
                         </button>
                     </div>
                     <div class="modal-body text-center text-danger">
-                        <h4>Delete <?php echo $packages->package_name; ?> ?</h4>
+                        <h4>Delete <?php echo $packages->package_name; ?> Membership Package ?</h4>
                         <br>
-                        <p>Heads Up, You are about to delete <?php echo $package->package_name; ?>. This action is irrevisble.</p>
+                        <p>Heads Up, You are about to delete <?php echo $packages->package_name; ?> membership package. This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
                         <a href="modules_memberships_packages?delete=<?php echo $packages->package_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
