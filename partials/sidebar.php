@@ -29,7 +29,7 @@
     <div class="menu">
         <?php
         /* Limit This By Using User Access Level */
-        if ($user_rank == 'Adminstrator' || $user_rank == 'Staff') {
+        if ($user_rank == 'Administrator' || $user_rank == 'Staff') {
         ?>
             <ul class="list">
                 <li> <a href="dashboard"><i class="zmdi zmdi-home"></i><span>Dashboard</span> </a> </li>

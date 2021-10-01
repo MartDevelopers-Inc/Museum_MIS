@@ -3,6 +3,38 @@ session_start();
 require_once('config/config.php');
 require_once('config/checklogin.php');
 checklogin();
+
+/* Update Profile */
+if (isset($_POST['Sign_Up'])) {
+    $user_id = $_POST['user_id'];
+    $user_name = $_POST['user_name'];
+    $user_email = $_POST['user_email'];
+    $user_phone = $_POST['user_phone'];
+    $user_idno = $_POST['user_idno'];
+
+    $query = 'UPDATE  users SET user_name =?, user_email =?, user_phone =?, user_idno =? WHERE user_id =?';
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param(
+        'sssss',
+        $user_name,
+        $user_email,
+        $user_phone,
+        $user_idno,
+        $user_id
+    );
+    $stmt->execute();
+    if ($stmt) {
+        $success = $user_name . 'Account Updated';
+    } else {
+        $err = 'Please Try Again Or Try Later';
+    }
+}
+
+
+/* Change Password */
+
+/* Delete Account */
+
 require_once('partials/head.php');
 ?>
 
@@ -73,9 +105,15 @@ require_once('partials/head.php');
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile_settings">Profile Settings</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_password">Change Password</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_access_level">Update Access Level</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_account">Delete Account</a></li>
+                                    <?php
+                                    $user_access_level = $_SESSION['user_access_level'];
+                                    /* Only Show This If Access Level Is Admin */
+                                    if ($user_access_level == 'Administrator') {
+                                    ?>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_password">Change Password</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_access_level">Update Access Level</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_account">Delete Account</a></li>
+                                    <?php } ?>
                                 </ul>
 
                                 <!-- Tab panes -->
@@ -125,83 +163,33 @@ require_once('partials/head.php');
                                             </form>
                                         </div>
                                     </div>
+
                                     <div role="tabpanel" class="tab-pane" id="change_password">
-                                        <div class="timeline-body">
-                                            <div class="timeline m-border">
-                                                <div class="timeline-item">
-                                                    <div class="item-content">
-                                                        <div class="text-small">Just now</div>
-                                                        <p>Finished task #features 4.</p>
+                                        <form method="POST">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>New Password</label>
+                                                            <div class="form-line">
+                                                                <input type="password" name="new_password" required class="form-control" />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="timeline-item border-info">
-                                                    <div class="item-content">
-                                                        <div class="text-small">11:30</div>
-                                                        <p>@Jessi retwit your post</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-warning border-l">
-                                                    <div class="item-content">
-                                                        <div class="text-small">10:30</div>
-                                                        <p>Call to customer #Jacob and discuss the detail.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-warning">
-                                                    <div class="item-content">
-                                                        <div class="text-small">3 days ago</div>
-                                                        <p>Jessi commented your post.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-danger">
-                                                    <div class="item-content">
-                                                        <div class="text--muted">Thu, 10 Mar</div>
-                                                        <p>Trip to the moon</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-info">
-                                                    <div class="item-content">
-                                                        <div class="text-small">Sat, 5 Mar</div>
-                                                        <p>Prepare for presentation</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-danger">
-                                                    <div class="item-content">
-                                                        <div class="text-small">Sun, 11 Feb</div>
-                                                        <p>Jessi assign you a task #Mockup Design.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-info">
-                                                    <div class="item-content">
-                                                        <div class="text-small">Thu, 17 Jan</div>
-                                                        <p>Follow up to close deal</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item">
-                                                    <div class="item-content">
-                                                        <div class="text-small">Just now</div>
-                                                        <p>Finished task #features 4.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-info">
-                                                    <div class="item-content">
-                                                        <div class="text-small">11:30</div>
-                                                        <p>@Jessi retwit your post</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-warning border-l">
-                                                    <div class="item-content">
-                                                        <div class="text-small">10:30</div>
-                                                        <p>Call to customer #Jacob and discuss the detail.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item border-warning">
-                                                    <div class="item-content">
-                                                        <div class="text-small">3 days ago</div>
-                                                        <p>Jessi commented your post.</p>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Confirm New Password</label>
+                                                            <div class="form-line">
+                                                                <input type="password" name="confirm_password" required class="form-control" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" name="Update_Password" class="btn btn-link waves-effect">SAVE CHANGES</button>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="delete_account">
                                         <h2 class="card-inside-title">Security Settings</h2>
