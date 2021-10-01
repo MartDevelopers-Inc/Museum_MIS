@@ -56,6 +56,25 @@ if (isset($_POST['Update_Password'])) {
         }
     }
 }
+/* Update Access Level */
+if (isset($_POST['Update_Access_Level'])) {
+    $user_id = $_POST['user_id'];
+    $user_access_level = $_POST['user_access_level'];
+
+    $query = 'UPDATE  users SET user_access_level =? WHERE user_id =?';
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param(
+        'ss',
+        $user_access_level,
+        $user_id
+    );
+    $stmt->execute();
+    if ($stmt) {
+        $success = 'Access Level Updated To : ' . $user_access_level;
+    } else {
+        $err = 'Please Try Again Or Try Later';
+    }
+}
 
 /* Delete Account */
 
@@ -208,6 +227,8 @@ require_once('partials/head.php');
                                                             <label>Confirm New Password</label>
                                                             <div class="form-line">
                                                                 <input type="password" name="confirm_password" required class="form-control" />
+                                                                <!-- Hide This -->
+                                                                <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -218,93 +239,54 @@ require_once('partials/head.php');
                                             </div>
                                         </form>
                                     </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="change_access_level">
+                                        <br>
+                                        <h2 class="card-inside-title text-center">Update <?php echo $hrm->user_name; ?> User Access Level & Previledges</h2>
+                                        <form method="POST">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <p class="m-t-10"> <b>Select Staff Access Level</b> </p>
+                                                            <select name="user_access_level" class="form-control show-tick">
+                                                                <?php
+                                                                if ($hrm->user_access_level == 'Staff') {
+                                                                ?>
+                                                                    <option value="Administrator">Administrator</option>
+                                                                <?php } else {
+                                                                ?>
+                                                                    <option value="Staff">Staff</option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <!-- Hide This -->
+                                                        <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" name="Update_Access_Level" class="btn btn-link waves-effect">SAVE CHANGES</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                     <div role="tabpanel" class="tab-pane" id="delete_account">
-                                        <h2 class="card-inside-title">Security Settings</h2>
                                         <div class="row clearfix">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="Username">
-                                                    </div>
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <br>
+                                                    <h2 class="card-inside-title  text-danger text-center">
+                                                        Heads Up!, you are about to delete <?php echo $hrm->user_name; ?> Staff account.
+                                                        This action is reversible, the system will permanently delete <?php echo $hrm->user_name; ?>
+                                                        records and any other related records too.
+                                                    </h2>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="password" class="form-control" placeholder="Current Password">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="password" class="form-control" placeholder="New Password">
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-raised btn-success btn-sm">Save Changes</button>
                                             </div>
+
                                         </div>
-                                        <h2 class="card-inside-title">Account Settings</h2>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-6 col-md-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="First Name">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="Last Name">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <textarea rows="4" class="form-control no-resize" placeholder="Address Line 1"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="City">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="E-mail">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="text" class="form-control" placeholder="Country">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="form-group checkbox">
-                                                    <label>
-                                                        <input name="optionsCheckboxes" type="checkbox">
-                                                        <span class="checkbox-material"><span class="check"></span></span> Profile Visibility For Everyone </label>
-                                                </div>
-                                                <div class="form-group checkbox m-t-0">
-                                                    <label>
-                                                        <input name="optionsCheckboxes" checked="" type="checkbox">
-                                                        <span class="checkbox-material"><span class="check"></span></span> New task notifications </label>
-                                                </div>
-                                                <div class="form-group checkbox m-t-0">
-                                                    <label>
-                                                        <input name="optionsCheckboxes" type="checkbox">
-                                                        <span class="checkbox-material"><span class="check"></span></span> New friend request notifications </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <button class="btn btn-raised btn-success">Save Changes</button>
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
                                     </div>
                                 </div>
                             </div>
@@ -313,6 +295,26 @@ require_once('partials/head.php');
                 </div>
             </div>
         </section>
+        <!-- Delete Account Modal -->
+        <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">CONFIRM</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center text-danger">
+                        <h4>Delete <?php echo $hrm->user_name; ?> ?</h4>
+                        <br>
+                        <p>Heads Up, You are about to delete <?php echo $hrm->user_name; ?>. This action is irrevisble.</p>
+                        <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
+                        <a href="modules_hrm?delete=<?php echo $hrm->user_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     <?php } ?>
     <?php require_once('partials/scripts.php'); ?>
 </body>
