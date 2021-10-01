@@ -57,6 +57,22 @@ if (isset($_POST['Update_Password'])) {
     }
 }
 
+/* Update Member Package ID */
+if (isset($_POST['Update_Membership'])) {
+    $user_id = $_POST['user_id'];
+    $user_membership_package_package_id = $_POST['user_membership_package_package_id'];
+
+    $query = 'UPDATE  user_membership_package SET user_membership_package_package_id =? WHERE user_membership_package_user_id =?';
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param('ss', $user_membership_package_package_id, $user_id);
+    $stmt->execute();
+    if ($stmt) {
+        $success = 'Membership Package Updated';
+    } else {
+        $err = 'Please Try Again Or Try Later';
+    }
+}
+
 require_once('partials/head.php');
 ?>
 
@@ -269,11 +285,10 @@ require_once('partials/head.php');
                                                     </h2>
                                                 </div>
                                             </div>
-
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
