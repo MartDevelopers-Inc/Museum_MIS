@@ -42,7 +42,7 @@ if (isset($_GET['delete'])) {
     $stmt->execute();
     $stmt->close();
     if ($stmt) {
-        $success = "Deleted" && header("refresh:1; url=modules_bookings_reservations");
+        $success = "Deleted" && header("refresh:1; url=modules_bookings_rooms");
     } else {
         $err = "Please Try Again Later";
     }
@@ -72,13 +72,14 @@ require_once('partials/head.php');
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-7">
-                        <h2>Museum Membership Packages</h2>
+                        <h2>Museum Guest Rooms</h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Memberships</li>
+                            <li class="breadcrumb-item"><a href="dashboard">Reservations</a></li>
+                            <li class="breadcrumb-item active">Rooms</li>
                         </ul>
                         <div class="text-right">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Membership Package</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Guest Room</button>
                         </div>
                     </div>
                 </div>
@@ -90,22 +91,22 @@ require_once('partials/head.php');
                         <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Fee</th>
-                                    <th>Details</th>
+                                    <th>Room Number</th>
+                                    <th>Room Rate</th>
+                                    <th>Room Category</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $ret = "SELECT * FROM membership_packages  ";
+                                $ret = "SELECT * FROM rooms  ";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
                                 $res = $stmt->get_result();
-                                while ($packages = $res->fetch_object()) {
+                                while ($rooms = $res->fetch_object()) {
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_memberships_package?view=<?php echo $packages->package_id; ?>">
+                                            <a href="modules_bookings_rooms?view=<?php echo $packages->package_id; ?>">
                                                 <?php echo $packages->package_name; ?>
                                             </a>
                                         </td>
