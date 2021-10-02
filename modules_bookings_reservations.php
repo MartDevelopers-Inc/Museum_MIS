@@ -5,44 +5,44 @@ require_once('config/checklogin.php');
 require_once('config/codeGen.php');
 checklogin();
 
-/* Membership Package */
-if (isset($_POST['Add_Package'])) {
-    $package_id = $sys_gen_id;
-    $package_name = $_POST['package_name'];
-    $package_details = $_POST['package_details'];
-    $package_pricing = $_POST['package_pricing'];
+/* Add Room */
+if (isset($_POST['Add_Room'])) {
+    $room_id = $sys_gen_id;
+    $room_number = $_POST['room_number'];
+    $room_type = $_POST['room_type'];
+    $room_rate = $_POST['room_rate'];
 
     /* Prevent Double Entries */
-    $sql = "SELECT * FROM  membership_packages WHERE package_name = '$package_name'";
+    $sql = "SELECT * FROM  rooms WHERE room_number = '$room_number'";
     $res = mysqli_query($mysqli, $sql);
     if (mysqli_num_rows($res) > 0) {
         $row = mysqli_fetch_assoc($res);
-        if ($package_name == $row['package_name']) {
-            $err =  "Package Name Already Exists";
+        if ($room_number == $row['room_number']) {
+            $err =  "Room Number Already Exists";
         }
     } else {
-        $query = "INSERT INTO membership_packages (package_id, package_pricing,  package_name, package_details) VALUES(?,?,?,?)";
+        $query = "INSERT INTO rooms (room_id, room_number, room_type, room_rate) VALUES(?,?,?,?)";
         $stmt = $mysqli->prepare($query);
-        $rc = $stmt->bind_param('ssss', $package_id, $package_pricing, $package_name, $package_details);
+        $rc = $stmt->bind_param('ssss', $room_id, $room_number, $room_type, $room_rate);
         $stmt->execute();
         if ($stmt) {
-            $success = "$package_name Added";
+            $success = "$room_number - $room_type Added";
         } else {
             $info = "Please Try Again Or Try Later";
         }
     }
 }
 
-/* Delete Membership Package */
+/* Delete Room */
 if (isset($_GET['delete'])) {
     $delete = $_GET['delete'];
-    $adn = "DELETE FROM membership_packages WHERE package_id=?";
+    $adn = "DELETE FROM rooms WHERE room_id =?";
     $stmt = $mysqli->prepare($adn);
     $stmt->bind_param('s', $delete);
     $stmt->execute();
     $stmt->close();
     if ($stmt) {
-        $success = "Deleted" && header("refresh:1; url=modules_memberships_packages");
+        $success = "Deleted" && header("refresh:1; url=modules_bookings_reservations");
     } else {
         $err = "Please Try Again Later";
     }
