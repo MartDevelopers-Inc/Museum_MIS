@@ -154,7 +154,7 @@ require_once('partials/head.php');
                                 <div class="form-group">
                                     <label>Room Category (type)</label>
                                     <div class="form-line">
-                                        <select type="text" name="room_type" required class="form-control">
+                                        <select type="text" name="room_type" required class="form-control show-tick">
                                             <option>Single</option>
                                             <option>Double</option>
                                             <option>Deluxe</option>
