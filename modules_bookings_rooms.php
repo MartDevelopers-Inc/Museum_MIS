@@ -93,6 +93,7 @@ require_once('partials/head.php');
                                 <tr>
                                     <th>Room Number</th>
                                     <th>Room Rate</th>
+                                    <th>Room Status</th>
                                     <th>Room Category</th>
                                 </tr>
                             </thead>
@@ -106,12 +107,13 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_bookings_rooms?view=<?php echo $packages->package_id; ?>">
-                                                <?php echo $packages->package_name; ?>
+                                            <a href="modules_bookings_room?view=<?php echo $rooms->room_id; ?>">
+                                                <?php echo $rooms->room_number; ?>
                                             </a>
                                         </td>
-                                        <td>Ksh <?php echo $packages->package_pricing; ?></td>
-                                        <td><?php echo $packages->package_details; ?></td>
+                                        <td>Ksh <?php echo $rooms->room_rate; ?></td>
+                                        <td><?php echo $rooms->room_status; ?></td>
+                                        <td><?php echo $rooms->room_type; ?></td>
                                     </tr>
                                 <?php
                                 } ?>
@@ -127,39 +129,44 @@ require_once('partials/head.php');
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="largeModalLabel">Register New Memberships Package</h4>
+                    <h4 class="modal-title" id="largeModalLabel">Register New Guest Room</h4>
                 </div>
                 <form method="POST">
                     <div class="modal-body">
                         <div class="row clearfix">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Package Name</label>
+                                    <label>Room Number</label>
                                     <div class="form-line">
-                                        <input type="text" name="package_name" required class="form-control" />
+                                        <input type="text" name="room_number" value="RM-<?php echo $b; ?> " required class="form-control" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Package Subscription Fee (Ksh)</label>
+                                    <label>Room Rate Fee (Ksh)</label>
                                     <div class="form-line">
-                                        <input type="text" name="package_pricing" required class="form-control" />
+                                        <input type="text" name="room_rate" required class="form-control" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Package Details</label>
+                                    <label>Room Category (type)</label>
                                     <div class="form-line">
-                                        <textarea type="text" rows="5" name="package_details" class="form-control no-resize auto-growth" required /></textarea>
+                                        <select type="text" name="room_type" required class="form-control">
+                                            <option>Single</option>
+                                            <option>Double</option>
+                                            <option>Deluxe</option>
+                                            <option>Presidential Suite</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" name="Add_Package" class="btn btn-link waves-effect">SAVE </button>
+                        <button type="submit" name="Add_Room" class="btn btn-link waves-effect">SAVE </button>
                         <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
                     </div>
                 </form>
