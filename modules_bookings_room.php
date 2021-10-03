@@ -31,21 +31,20 @@ if (isset($_POST['Update_Room'])) {
 }
 
 /* Vacate Room */
-if (isset($_POST['Vacate_Room'])) {
-    $room_id = $_POST['room_id'];
+if (isset($_GET['vacate'])) {
+    $view = $_GET['view'];
     $room_status = 'Vacant';
 
     $query = "UPDATE  rooms SET room_status =? WHERE room_id = ?";
     $stmt = $mysqli->prepare($query);
-    $rc = $stmt->bind_param('ss', $room_status, $room_id);
+    $rc = $stmt->bind_param('ss', $room_status, $view);
     $stmt->execute();
     if ($stmt) {
-        $success = "Room Vacated";
+        $success = "Room Vacated" && header("refresh:1; url=modules_bookings_room?view=$view");;
     } else {
         $info = "Please Try Again Or Try Later";
     }
 }
-
 
 require_once('partials/head.php');
 ?>
@@ -94,11 +93,11 @@ require_once('partials/head.php');
                         <div class="boxs-simple">
                             <div class="profile-header">
                                 <div class="profile_info">
-                                    <div class="profile-image"> <img src="assets/images/Membership_Package" alt=""> </div>
+                                    <div class="profile-image"> <img src="assets/images/Membership_Package.png" alt=""> </div>
                                     <h4 class="mb-0"><strong><?php echo $room->room_number; ?></strong></h4>
                                     <span class="">Category: <?php echo $room->room_type;  ?></span><br>
                                     <span class="">Status: <?php echo $room->room_status;  ?></span><br>
-                                    <span class="">Reservation Rate: <?php echo $room->room_rate;  ?></span><br>
+                                    <span class="">Reservation Rate: Ksh <?php echo $room->room_rate;  ?></span><br>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +117,7 @@ require_once('partials/head.php');
                                     $user_access_level = $_SESSION['user_access_level'];
                                     /* Only Show This If Access Level Is Admin */
                                     if ($user_access_level == 'Administrator') {
-                                        if ($room->room_status != 'Vacant') {
+                                        if ($room->room_status == 'Occupied') {
                                     ?>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#vacate_room">Vacate Room</a></li>
                                         <?php } ?>
@@ -130,7 +129,47 @@ require_once('partials/head.php');
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="room_settings">
                                         <div class="wrap-reset">
-
+                                            <form method="POST">
+                                                <div class="modal-body">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Room Number</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" name="room_number" value="<?php echo  $room->room_number; ?>" required class="form-control" />
+                                                                    <!-- Hide This -->
+                                                                    <input type="hidden" name="room_id" value="<?php echo  $room->room_id; ?>" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Room Rate Fee (Ksh)</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" name="room_rate" value="<?php echo $room->room_rate; ?>" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Room Category (type)</label>
+                                                                <div class="form-line">
+                                                                    <select type="text" name="room_type" required class="form-control show-tick">
+                                                                        <option><?php echo $room->room_type; ?></option>
+                                                                        <option>Single</option>
+                                                                        <option>Double</option>
+                                                                        <option>Deluxe</option>
+                                                                        <option>Presidential Suite</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="Update_Room" class="btn btn-link waves-effect">SAVE </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
 
@@ -153,7 +192,6 @@ require_once('partials/head.php');
                                                     </h2>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacate_modal">Vacate Room</button>
@@ -175,7 +213,7 @@ require_once('partials/head.php');
 
                                         </div>
                                         <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Room</button>
                                         </div>
                                     </div>
 
@@ -221,7 +259,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to vacate a guest in room number: <?php echo $room->room_number; ?>.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_room?view=<?php echo $room->room_id; ?>&vacate=<?php echo $room->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_room?view=<?php echo $room->room_id; ?>&vacate=<?php echo $room->room_id; ?>" class="text-center btn btn-danger"> Vacate </a>
                     </div>
                 </div>
             </div>
