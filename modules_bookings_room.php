@@ -110,146 +110,75 @@ require_once('partials/head.php');
                             <div class="body">
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile_settings">Profile Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#room_settings">Room Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#room_reservations_history">Room Reservation History</a></li>
+                                    <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#room_revenue">Room Revenue</a></li>
+
                                     <?php
                                     $user_access_level = $_SESSION['user_access_level'];
                                     /* Only Show This If Access Level Is Admin */
                                     if ($user_access_level == 'Administrator') {
+                                        if ($room->room_status != 'Vacant') {
                                     ?>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_password">Change Password</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#change_access_level">Update Access Level</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_account">Delete Account</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#vacate_room">Vacate Room</a></li>
+                                        <?php } ?>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_room">Delete Room</a></li>
                                     <?php } ?>
                                 </ul>
 
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="profile_settings">
+                                    <div role="tabpanel" class="tab-pane active" id="room_settings">
                                         <div class="wrap-reset">
-                                            <form method="POST">
-                                                <div class="modal-body">
-                                                    <div class="row clearfix">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>Full Name</label>
-                                                                <div class="form-line">
-                                                                    <input type="text" name="user_name" value="<?php echo $hrm->user_name; ?>" required class="form-control" />
-                                                                    <!-- Hide This -->
-                                                                    <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>Phone Number</label>
-                                                                <div class="form-line">
-                                                                    <input type="text" name="user_phone" value="<?php echo $hrm->user_phone; ?>" required class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>National ID No</label>
-                                                                <div class="form-line">
-                                                                    <input type="text" name="user_idno" value="<?php echo $hrm->user_idno; ?>" required class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>Email</label>
-                                                                <div class="form-line">
-                                                                    <input type="text" name="user_email" value="<?php echo $hrm->user_email; ?>" required class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" name="Update_Account" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                                                </div>
-                                            </form>
+
                                         </div>
                                     </div>
 
-                                    <div role="tabpanel" class="tab-pane" id="change_password">
-                                        <form method="POST">
-                                            <div class="modal-body">
-                                                <div class="row clearfix">
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <label>New Password</label>
-                                                            <div class="form-line">
-                                                                <input type="password" name="new_password" required class="form-control" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <label>Confirm New Password</label>
-                                                            <div class="form-line">
-                                                                <input type="password" name="confirm_password" required class="form-control" />
-                                                                <!-- Hide This -->
-                                                                <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" name="Update_Password" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                                            </div>
-                                        </form>
+                                    <div role="tabpanel" class="tab-pane" id="room_reservations_history">
+
                                     </div>
 
-                                    <div role="tabpanel" class="tab-pane" id="change_access_level">
-                                        <br>
-                                        <h2 class="card-inside-title text-center">Update <?php echo $hrm->user_name; ?> User Access Level & Previledges</h2>
-                                        <form method="POST">
-                                            <div class="modal-body">
-                                                <div class="row clearfix">
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <p class="m-t-10"> <b>Select Staff Access Level</b> </p>
-                                                            <select name="user_access_level" class="form-control show-tick">
-                                                                <?php
-                                                                if ($hrm->user_access_level == 'Staff') {
-                                                                ?>
-                                                                    <option value="Administrator">Administrator</option>
-                                                                <?php } else {
-                                                                ?>
-                                                                    <option value="Staff">Staff</option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <!-- Hide This -->
-                                                        <input type="hidden" name="user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" name="Update_Access_Level" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                                            </div>
-                                        </form>
+                                    <div role="tabpanel" class="tab-pane" id="room_revenue">
+
                                     </div>
-                                    <div role="tabpanel" class="tab-pane" id="delete_account">
+
+
+                                    <div role="tabpanel" class="tab-pane" id="vacate_room">
                                         <div class="row clearfix">
                                             <div class="modal-body">
                                                 <div class="row clearfix">
                                                     <br>
                                                     <h2 class="card-inside-title  text-danger text-center">
-                                                        Heads Up!, you are about to delete <?php echo $hrm->user_name; ?> Staff account.
-                                                        This action is reversible, the system will permanently delete <?php echo $hrm->user_name; ?>
+                                                        Heads Up!, you are about to vacate guest in room number : <?php echo $room->room_number; ?>.
+                                                    </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacate_modal">Vacate Room</button>
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="delete_room">
+                                        <div class="row clearfix">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <br>
+                                                    <h2 class="card-inside-title  text-danger text-center">
+                                                        Heads Up!, you are about to delete room number : <?php echo $room->room_number; ?>.
+                                                        This action is reversible, the system will permanently delete this room
                                                         records and any other related records too.
                                                     </h2>
                                                 </div>
                                             </div>
 
                                         </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

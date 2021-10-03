@@ -284,10 +284,11 @@ require_once('partials/head.php');
                                             </div>
 
                                         </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Delete Account</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
