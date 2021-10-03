@@ -67,29 +67,23 @@ require_once('partials/head.php');
     <?php
     require_once('partials/sidebar.php');
     $view = $_GET['view'];
-    $ret = "SELECT * FROM users WHERE user_id = '$view'";
+    $ret = "SELECT * FROM rooms WHERE room_id = '$view'";
     $stmt = $mysqli->prepare($ret);
     $stmt->execute(); //ok
     $res = $stmt->get_result();
-    while ($hrm = $res->fetch_object()) {
-        if ($hrm->user_profile_pic == '') {
-            $url = "assets/images/no-profile.png";
-        } else {
-            $url = "assets/images/$hrm->user_profile_pic";
-        }
+    while ($room = $res->fetch_object()) {
     ?>
-
-
         <section class="content profile-page">
             <div class="container-fluid">
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-7">
-                            <h2><?php echo $hrm->user_name; ?> Profile</h2>
+                            <h2><?php echo $room->room_number; ?> Details</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="modules_hrm">HRM</a></li>
-                                <li class="breadcrumb-item active">Profile</li>
+                                <li class="breadcrumb-item"><a href="">Reservations</a></li>
+                                <li class="breadcrumb-item"><a href="modules_bookings_rooms">Guest Rooms</a></li>
+                                <li class="breadcrumb-item active"><?php echo $room->room_number; ?></li>
                             </ul>
                         </div>
                     </div>
@@ -100,12 +94,11 @@ require_once('partials/head.php');
                         <div class="boxs-simple">
                             <div class="profile-header">
                                 <div class="profile_info">
-                                    <div class="profile-image"> <img src="<?php echo $url; ?>" alt=""> </div>
-                                    <h4 class="mb-0"><strong><?php echo $hrm->user_name; ?></strong></h4>
-                                    <span class="">Email: <?php echo $hrm->user_email;  ?></span><br>
-                                    <span class="">Contacts: <?php echo $hrm->user_phone;  ?></span><br>
-                                    <span class="">ID No: <?php echo $hrm->user_idno;  ?></span><br>
-                                    <span class="">Access Level: <?php echo $hrm->user_access_level;  ?></span><br>
+                                    <div class="profile-image"> <img src="assets/images/Membership_Package" alt=""> </div>
+                                    <h4 class="mb-0"><strong><?php echo $room->room_number; ?></strong></h4>
+                                    <span class="">Category: <?php echo $room->room_type;  ?></span><br>
+                                    <span class="">Status: <?php echo $room->room_status;  ?></span><br>
+                                    <span class="">Reservation Rate: <?php echo $room->room_rate;  ?></span><br>
                                 </div>
                             </div>
                         </div>
