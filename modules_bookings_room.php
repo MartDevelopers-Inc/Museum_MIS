@@ -197,11 +197,31 @@ require_once('partials/head.php');
                         </button>
                     </div>
                     <div class="modal-body text-center text-danger">
-                        <h4>Delete <?php echo $hrm->user_name; ?> ?</h4>
+                        <h4>Delete <?php echo $room->room_number; ?> ?</h4>
                         <br>
-                        <p>Heads Up, You are about to delete <?php echo $hrm->user_name; ?>. This action is irrevisble.</p>
+                        <p>Heads Up, You are about to delete room number: <?php echo $room->room_number; ?>. This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_hrm?delete=<?php echo $hrm->user_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_rooms?delete=<?php echo $room->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Vacate Room Modal -->
+        <div class="modal fade" id="vacate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">CONFIRM</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center text-danger">
+                        <h4>Vacate Room Number : <?php echo $room->room_number; ?> ?</h4>
+                        <br>
+                        <p>Heads Up, You are about to vacate a guest in room number: <?php echo $room->room_number; ?>.</p>
+                        <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
+                        <a href="modules_bookings_room?view=<?php echo $room->room_id; ?>&vacate=<?php echo $room->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
