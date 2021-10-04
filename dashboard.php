@@ -134,7 +134,7 @@ require_once('partials/head.php');
                                             </td>
                                             <td class="number"><?php echo $reservations->reservation_date; ?></td>
                                             <td><?php echo $reservations->reservation_payment_status; ?></td>
-                                            <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
+                                            <td class="actions"><a href="modules_bookings_reservation?view=<?php echo $reservations->reservation_id; ?>" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
