@@ -64,14 +64,14 @@ require_once('partials/head.php');
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-7">
-                        <h2>Museum Guest Rooms</h2>
+                        <h2>Museum Visit Reservations</h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="dashboard">Reservations</a></li>
-                            <li class="breadcrumb-item active">Rooms</li>
+                            <li class="breadcrumb-item"><a href="">Bookings</a></li>
+                            <li class="breadcrumb-item active">Reservations</li>
                         </ul>
                         <div class="text-right">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Guest Room</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Museum Visit Reservation</button>
                         </div>
                     </div>
                 </div>
@@ -83,29 +83,33 @@ require_once('partials/head.php');
                         <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                             <thead>
                                 <tr>
-                                    <th>Room Number</th>
-                                    <th>Room Rate</th>
-                                    <th>Room Status</th>
-                                    <th>Room Category</th>
+                                    <th>Member Details</th>
+                                    <th>Dates</th>
+                                    <th>Payment Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $ret = "SELECT * FROM rooms  ";
+                                $ret = "SELECT * FROM reservations r INNER JOIN 
+                                users u ON u.user_id = r.reservation_user_id ";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
                                 $res = $stmt->get_result();
-                                while ($rooms = $res->fetch_object()) {
+                                while ($reservations = $res->fetch_object()) {
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_bookings_room?view=<?php echo $rooms->room_id; ?>">
-                                                <?php echo $rooms->room_number; ?>
+                                            <a href="modules_bookings_room?view=<?php echo $reservations->reservation_id; ?>">
+                                                Name: <?php echo $reservations->user_name; ?><br>
+                                                Email: <?php echo $reservations->user_email; ?><br>
+                                                Contact: <?php echo $reservations->user_phone; ?>
                                             </a>
                                         </td>
-                                        <td>Ksh <?php echo $rooms->room_rate; ?></td>
-                                        <td><?php echo $rooms->room_status; ?></td>
-                                        <td><?php echo $rooms->room_type; ?></td>
+                                        <td>
+                                            Visit Date : <?php echo date('d, M Y', strtotime($reservations->reservation_date)); ?><br>
+                                            Created At : <?php echo date('d, M Y g:ia', strtotime($reservations->reservation_created_at)); ?>
+                                        </td>
+                                        <td><?php echo $reservations->reservation_payment_status; ?></td>
                                     </tr>
                                 <?php
                                 } ?>
@@ -121,44 +125,49 @@ require_once('partials/head.php');
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="largeModalLabel">Register New Guest Room</h4>
+                    <h4 class="modal-title" id="largeModalLabel">Add Member Museum Visit Reservation</h4>
                 </div>
                 <form method="POST">
                     <div class="modal-body">
                         <div class="row clearfix">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Room Number</label>
+                                    <label>Member Name</label>
                                     <div class="form-line">
-                                        <input type="text" name="room_number" value="RM-<?php echo $b; ?> " required class="form-control" />
+                                        <select type="text" name="reservation_user_id" required class="form-control show-tick">
+                                            <?php
+                                            $ret = "SELECT * FROM users WHERE user_access_level = 'Member'  ";
+                                            $stmt = $mysqli->prepare($ret);
+                                            $stmt->execute(); //ok
+                                            $res = $stmt->get_result();
+                                            while ($users = $res->fetch_object()) {
+                                            ?>
+                                                <option value="<?php echo $users->user_id; ?>"><?php echo $users->user_name; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Room Rate Fee (Ksh)</label>
+                                    <label>Reservation Visit Date</label>
                                     <div class="form-line">
-                                        <input type="text" name="room_rate" required class="form-control" />
+                                        <input type="date" name="reservation_date" required class="form-control" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Room Category (type)</label>
+                                    <label>Reservation Visit Details (Indicate Places You Want To Visit)</label>
                                     <div class="form-line">
-                                        <select type="text" name="room_type" required class="form-control show-tick">
-                                            <option>Single</option>
-                                            <option>Double</option>
-                                            <option>Deluxe</option>
-                                            <option>Presidential Suite</option>
-                                        </select>
+                                        <textarea type="text" rows="5" name="reservation_details" class="form-control no-resize auto-growth" required /></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" name="Add_Room" class="btn btn-link waves-effect">SAVE </button>
+                        <button type="submit" name="Add_Reservation" class="btn btn-link waves-effect">SAVE </button>
                         <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
                     </div>
                 </form>
