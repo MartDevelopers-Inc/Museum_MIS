@@ -110,11 +110,11 @@ require_once('partials/head.php');
                                         </td>
                                         <td>
                                             No : <?php echo $reservations->room_number; ?><br>
-                                            Type :<?php echo $reservations->room_type; ?>
+                                            Type : <?php echo $reservations->room_type; ?>
                                         </td>
                                         <td>
                                             Check In : <?php echo date('d, M Y', strtotime($reservations->accomodation_check_indate)); ?><br>
-                                            Check Out : <?php echo date('d, M Y g:ia', strtotime($reservations->accomodation_check_out_date)); ?>
+                                            Check Out : <?php echo date('d, M Y', strtotime($reservations->accomodation_check_out_date)); ?>
                                         </td>
                                         <td><?php echo $reservations->accomodation_payment_status; ?></td>
                                     </tr>
@@ -159,9 +159,9 @@ require_once('partials/head.php');
                                 <div class="form-group">
                                     <label>Room Number</label>
                                     <div class="form-line">
-                                        <select type="text" name="accomodation_user_id" required class="form-control show-tick">
+                                        <select type="text" name="accomodation_room_id" required class="form-control show-tick">
                                             <?php
-                                            $ret = "SELECT * FROM rooms WHERE room_status != 'Vacant '  ";
+                                            $ret = "SELECT * FROM rooms WHERE room_status = 'Vacant'  ";
                                             $stmt = $mysqli->prepare($ret);
                                             $stmt->execute(); //ok
                                             $res = $stmt->get_result();
