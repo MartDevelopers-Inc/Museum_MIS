@@ -85,7 +85,7 @@ require_once('partials/head.php');
                         <div class="boxs-simple">
                             <div class="profile-header">
                                 <div class="profile_info">
-                                    <div class="profile-image"> <img src="assets/images/Membership_Package.png" alt=""> </div>
+                                    <div class="profile-image"> <img src="assets/images/room.png" alt=""> </div>
                                     <h4 class="mb-0"><strong><?php echo $room->room_number; ?></strong></h4>
                                     <span class="">Category: <?php echo $room->room_type;  ?></span><br>
                                     <span class="">Status: <?php echo $room->room_status;  ?></span><br>
