@@ -50,7 +50,7 @@ require_once('partials/head.php');
     $stmt = $mysqli->prepare($ret);
     $stmt->execute(); //ok
     $res = $stmt->get_result();
-    while ($reservations = $res->fetch_object()) {
+    while ($reservation = $res->fetch_object()) {
         $checkin = strtotime($reservation->accomodation_check_indate);
         $checkout = strtotime($reservation->accomodation_check_out_date);
         $days_reserved = $checkout - $checkin;
@@ -113,7 +113,53 @@ require_once('partials/head.php');
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="reservation_update">
                                         <div class="wrap-reset">
-
+                                            <form method="POST">
+                                                <div class="modal-body">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Room Number</label>
+                                                                <div class="form-line">
+                                                                    <select type="text" name="accomodation_room_id" required class="form-control show-tick">
+                                                                        <option value="<?php echo $reservations->room_id; ?>"><?php echo $reservations->room_number; ?></option>
+                                                                        <?php
+                                                                        $ret = "SELECT * FROM rooms WHERE room_status = 'Vacant'  ";
+                                                                        $stmt = $mysqli->prepare($ret);
+                                                                        $stmt->execute(); //ok
+                                                                        $res = $stmt->get_result();
+                                                                        while ($rooms = $res->fetch_object()) {
+                                                                        ?>
+                                                                            <option value="<?php echo $rooms->room_id; ?>"><?php echo $rooms->room_number; ?></option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Check In Date</label>
+                                                                <div class="form-line">
+                                                                    <input type="date" value="<?php echo $reservations->accomodation_check_indate; ?>" name="accomodation_check_indate" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Check In Out</label>
+                                                                <div class="form-line">
+                                                                    <input type="date" value="<?php echo $reservations->accomodation_check_out_date; ?>" name="accomodation_check_out_date" required class="form-control" />
+                                                                    <!-- Hide This -->
+                                                                    <input type="hidden" value="<?php echo $reservations->accomodation_id; ?>" name="accomodation_id" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="Add_Reservation" class="btn btn-link waves-effect">SAVE </button>
+                                                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
 
@@ -238,7 +284,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_accomodation?delete=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_accomodation?delete=<?php echo $reservations->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
