@@ -99,7 +99,7 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_bookings_room?view=<?php echo $reservations->reservation_id; ?>">
+                                            <a href="modules_bookings_reservation?view=<?php echo $reservations->reservation_id; ?>">
                                                 Name: <?php echo $reservations->user_name; ?><br>
                                                 Email: <?php echo $reservations->user_email; ?><br>
                                                 Contact: <?php echo $reservations->user_phone; ?>
