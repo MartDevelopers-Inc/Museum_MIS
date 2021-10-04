@@ -24,22 +24,20 @@ if (isset($_POST['Update_Reservation'])) {
 /* Pay Reservation */
 
 /* Approve Reservation */
-if (isset($_POST['Approve_Reservation'])) {
-    $reservation_id = $_POST['reservation_id'];
-    $reservation_status = $_POST['reservation_status'];
+if (isset($_GET['Approve_Reservation'])) {
+    $reservation_id = $_GET['view'];
+    $reservation_status = 'Approved';
 
     $query = "UPDATE  reservations SET reservation_status =? WHERE reservation_id = ?";
     $stmt = $mysqli->prepare($query);
     $rc = $stmt->bind_param('ss',  $reservation_status, $reservation_id);
     $stmt->execute();
     if ($stmt) {
-        $success = "Reservation $reservation_status";
+        $success = "Reservation $reservation_status" && header("refresh:1; url=modules_bookings_reservation?view=$reservation_id");
     } else {
         $info = "Please Try Again Or Try Later";
     }
 }
-
-
 
 require_once('partials/head.php');
 ?>
@@ -79,8 +77,6 @@ require_once('partials/head.php');
                                 <li class="breadcrumb-item"><a href="modules_bookings_reservations">Bookings</a></li>
                                 <li class="breadcrumb-item"><a href="modules_bookings_reservations">Reservations</a></li>
                                 <li class="breadcrumb-item active">Details</li>
-
-
                             </ul>
                         </div>
                     </div>
@@ -121,6 +117,7 @@ require_once('partials/head.php');
                                     /* Only Show This If Access Level Is Admin */
                                     if ($user_access_level == 'Administrator') {
                                     ?>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#approve_reservation">Approve Reservation</a></li>
                                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_reservation">Delete Reservation</a></li>
                                     <?php } ?>
                                 </ul>
@@ -195,6 +192,23 @@ require_once('partials/head.php');
                                         </table>
                                     </div>
 
+                                    <div role="tabpanel" class="tab-pane" id="approve_reservation">
+                                        <div class="row clearfix">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <br>
+                                                    <h2 class="text-danger text-center">
+                                                        Heads Up!, you are about to approve this reservation record.
+                                                    </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#approve">Approve Reservation</button>
+                                        </div>
+                                    </div>
+
                                     <div role="tabpanel" class="tab-pane" id="delete_reservation">
                                         <div class="row clearfix">
                                             <div class="modal-body">
@@ -232,13 +246,34 @@ require_once('partials/head.php');
                     <div class="modal-body text-center text-danger">
                         <h4>Delete Reservation</h4>
                         <br>
-                        <p>Heads Up, You are about to this reservation record, This action is irrevisble.</p>
+                        <p>Heads Up, You are about to delete this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
                         <a href="modules_bookings_reservations?delete=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Approve Reservation -->
+        <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">CONFIRM</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center text-danger">
+                        <h4>Approve Reservation</h4>
+                        <br>
+                        <p>Heads Up, You are about to approve this reservation record</p>
+                        <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
+                        <a href="modules_bookings_reservation?view=<?php echo $reservation->reservation_id; ?>&Approve_Reservation=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Approve </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <?php } ?>
     <?php require_once('partials/scripts.php'); ?>
 </body>
