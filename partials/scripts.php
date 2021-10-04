@@ -68,3 +68,15 @@
    <script src="assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
    <script src="assets/js/pages/tables/jquery-datatable.js"></script>
    <script src="assets/js/pages/forms/basic-form-elements.js"></script>
+   <script>
+       /* Print Contents Inside A Div */
+       function printContent(el) {
+           var restorepage = $('body').html();
+           var printcontent = $('#' + el).clone();
+           var enteredtext = $('#text').val();
+           $('body').empty().html(printcontent);
+           window.print();
+           $('body').html(restorepage);
+           $('#text').html(enteredtext);
+       }
+   </script>

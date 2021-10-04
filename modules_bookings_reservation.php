@@ -164,80 +164,83 @@ require_once('partials/head.php');
                                         <!-- Payment Record -->
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="card">
-                                                <div class="header text-center">
-                                                    <h2>Museum Visit Reservation Payment Receipt</h2>
-                                                    <h4>Receipt # <strong><?php echo $b; ?></strong>
-                                                    </h4>
-                                                </div>
-                                                <div class="body">
-                                                    <hr>
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <address>
-                                                                <strong><?php echo $reservation->user_name; ?></strong><br>
-                                                                Email: <?php echo $reservation->user_email; ?><br>
-                                                                <abbr title="Phone">P:</abbr> <?php echo $reservation->user_phone; ?>
-                                                            </address>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6 text-right">
-                                                            <p><strong>Reservation Visit Date: </strong> <?php echo date('M, d Y', strtotime($reservation->reservation_date)); ?></p>
-                                                            <p class="m-t-10"><strong>Reservation Status: </strong>
-                                                                <?php if ($reservation->reservation_status == 'Pending') { ?>
-                                                                    <span class="badge bg-orange">Pending</span>
-                                                                <?php } else {
-                                                                ?>
-                                                                    <span class="badge bg-success">Approved</span>
-                                                                <?php  } ?>
-                                                            </p>
-                                                        </div>
+                                                <div id="print">
+                                                    <div class="header text-center">
+                                                        <h2>Museum Visit Reservation Payment Receipt</h2>
+                                                        <h4>Receipt # <strong><?php echo $b; ?></strong>
+                                                        </h4>
                                                     </div>
-                                                    <div class="mt-40"></div>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="table-responsive">
-                                                                <table id="mainTable" class="table table-striped" style="cursor: pointer;">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Payment Amount</th>
-                                                                            <th>Confirmation Code</th>
-                                                                            <th>Date Paid</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php
-                                                                        /* Load Payment Record Related To This Reservation */
-                                                                        $ret = "SELECT * FROM payments  WHERE payment_service_paid_id = '$view'";
-                                                                        $stmt = $mysqli->prepare($ret);
-                                                                        $stmt->execute(); //ok
-                                                                        $res = $stmt->get_result();
-                                                                        while ($payment_details = $res->fetch_object()) {
-                                                                        ?>
-                                                                            <tr>
-                                                                                <td>Ksh <?php echo $payment_details->payment_amount; ?></td>
-                                                                                <td><?php echo $payment_details->payment_confirmation_code; ?></td>
-                                                                                <td><?php echo date('M, d Y', strtotime($payment_details->payment_created_at)); ?></td>
-                                                                            </tr>
-                                                                        <?php } ?>
-
-                                                                    </tbody>
-                                                                </table>
+                                                    <div class="body">
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <address>
+                                                                    <strong><?php echo $reservation->user_name; ?></strong><br>
+                                                                    Email: <?php echo $reservation->user_email; ?><br>
+                                                                    <abbr title="Phone">P:</abbr> <?php echo $reservation->user_phone; ?>
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-6 text-right">
+                                                                <p><strong>Reservation Visit Date: </strong> <?php echo date('M, d Y', strtotime($reservation->reservation_date)); ?></p>
+                                                                <p class="m-t-10"><strong>Approval Status: </strong>
+                                                                    <?php if ($reservation->reservation_status == 'Pending') { ?>
+                                                                        <span class="badge bg-orange">Pending</span>
+                                                                    <?php } else {
+                                                                    ?>
+                                                                        <span class="badge bg-success">Approved</span>
+                                                                    <?php  } ?>
+                                                                </p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="row" style="border-radius: 0px;">
-                                                        <div class="col-md-12 text-right">
-                                                            <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment_details->payment_amount; ?></p>
-                                                            <p class="text-right">Discout: 12.9%</p>
-                                                            <p class="text-right">VAT: 12.9%</p>
+                                                        <div class="mt-40"></div>
+                                                        <?php
+                                                        /* Load Payment Record Related To This Reservation */
+                                                        $ret = "SELECT * FROM payments  WHERE payment_service_paid_id = '$view'";
+                                                        $stmt = $mysqli->prepare($ret);
+                                                        $stmt->execute(); //ok
+                                                        $res = $stmt->get_result();
+                                                        while ($payment_details = $res->fetch_object()) {
+                                                        ?>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="table-responsive">
+                                                                        <table id="mainTable" class="table table-striped" style="cursor: pointer;">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Payment Amount</th>
+                                                                                    <th>Confirmation Code</th>
+                                                                                    <th>Date Paid</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                <tr>
+                                                                                    <td>Ksh <?php echo $payment_details->payment_amount; ?></td>
+                                                                                    <td><?php echo $payment_details->payment_confirmation_code; ?></td>
+                                                                                    <td><?php echo date('M, d Y', strtotime($payment_details->payment_created_at)); ?></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <hr>
-                                                            <h3 class="text-right">Ksh: <?php echo $payment_details->payment_amount; ?></h3>
-                                                        </div>
+                                                            <div class="row" style="border-radius: 0px;">
+                                                                <div class="col-md-12 text-right">
+                                                                    <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment_details->payment_amount; ?></p>
+                                                                    <p class="text-right">Discout: 12.9%</p>
+                                                                    <p class="text-right">VAT: 12.9%</p>
+                                                                    <hr>
+                                                                    <h3 class="text-right">Ksh: <?php echo $payment_details->payment_amount; ?></h3>
+                                                                </div>
+                                                            </div>
+                                                        <?php } ?>
+                                                        <hr>
                                                     </div>
-                                                    <hr>
-                                                    <div class="hidden-print col-md-12 text-right">
-                                                        <a href="javascript:window.print()" class="btn btn-raised btn-success"><i class="zmdi zmdi-print"></i></a>
-                                                    </div>
+
+                                                </div>
+                                                <div class="hidden-print col-md-12 text-right">
+                                                    <button id="print" onclick="printContent('print');" class="btn btn-raised btn-success"><i class="zmdi zmdi-print"></i></button>
                                                 </div>
                                             </div>
                                         </div>
