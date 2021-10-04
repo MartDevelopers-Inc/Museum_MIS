@@ -65,14 +65,14 @@ require_once('partials/head.php');
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-7">
-                        <h2>Museum Visit Reservations</h2>
+                        <h2>Museum Guest Rooms Accomodation Reservations</h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="">Bookings</a></li>
-                            <li class="breadcrumb-item active">Reservations</li>
+                            <li class="breadcrumb-item active">Accomodations</li>
                         </ul>
                         <div class="text-right">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Museum Visit Reservation</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Guest Room Reservation</button>
                         </div>
                     </div>
                 </div>
@@ -85,14 +85,16 @@ require_once('partials/head.php');
                             <thead>
                                 <tr>
                                     <th>Member Details</th>
+                                    <th>Room Details</th>
                                     <th>Dates</th>
                                     <th>Payment Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $ret = "SELECT * FROM reservations r INNER JOIN 
-                                users u ON u.user_id = r.reservation_user_id ";
+                                $ret = "SELECT * FROM accomodations a INNER JOIN 
+                                users u ON u.user_id = a.accomodation_user_id 
+                                INNER JOIN rooms r ON r.room_id = a.accomodation_room_id";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
                                 $res = $stmt->get_result();
@@ -100,17 +102,21 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_bookings_reservation?view=<?php echo $reservations->reservation_id; ?>">
+                                            <a href="modules_bookings_accomodation?view=<?php echo $reservations->accomodation_id; ?>">
                                                 Name: <?php echo $reservations->user_name; ?><br>
                                                 Email: <?php echo $reservations->user_email; ?><br>
                                                 Contact: <?php echo $reservations->user_phone; ?>
                                             </a>
                                         </td>
                                         <td>
-                                            Visit Date : <?php echo date('d, M Y', strtotime($reservations->reservation_date)); ?><br>
-                                            Created At : <?php echo date('d, M Y g:ia', strtotime($reservations->reservation_created_at)); ?>
+                                            No : <?php echo $reservations->room_number; ?><br>
+                                            Type :<?php echo $reservations->room_type; ?>
                                         </td>
-                                        <td><?php echo $reservations->reservation_payment_status; ?></td>
+                                        <td>
+                                            Check In : <?php echo date('d, M Y', strtotime($reservations->accomodation_check_indate)); ?><br>
+                                            Check Out : <?php echo date('d, M Y g:ia', strtotime($reservations->accomodation_check_out_date)); ?>
+                                        </td>
+                                        <td><?php echo $reservations->accomodation_payment_status; ?></td>
                                     </tr>
                                 <?php
                                 } ?>
@@ -126,7 +132,7 @@ require_once('partials/head.php');
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="largeModalLabel">Add Member Museum Visit Reservation</h4>
+                    <h4 class="modal-title" id="largeModalLabel">Add Guest Room Reservation</h4>
                 </div>
                 <form method="POST">
                     <div class="modal-body">
@@ -135,7 +141,7 @@ require_once('partials/head.php');
                                 <div class="form-group">
                                     <label>Member Name</label>
                                     <div class="form-line">
-                                        <select type="text" name="reservation_user_id" required class="form-control show-tick">
+                                        <select type="text" name="accomodation_user_id" required class="form-control show-tick">
                                             <?php
                                             $ret = "SELECT * FROM users WHERE user_access_level = 'Member'  ";
                                             $stmt = $mysqli->prepare($ret);
@@ -151,17 +157,35 @@ require_once('partials/head.php');
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Reservation Visit Date</label>
+                                    <label>Room Number</label>
                                     <div class="form-line">
-                                        <input type="date" name="reservation_date" required class="form-control" />
+                                        <select type="text" name="accomodation_user_id" required class="form-control show-tick">
+                                            <?php
+                                            $ret = "SELECT * FROM rooms WHERE room_status != 'Vacant '  ";
+                                            $stmt = $mysqli->prepare($ret);
+                                            $stmt->execute(); //ok
+                                            $res = $stmt->get_result();
+                                            while ($rooms = $res->fetch_object()) {
+                                            ?>
+                                                <option value="<?php echo $rooms->room_id; ?>"><?php echo $rooms->room_number; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Reservation Visit Details (Indicate Places You Want To Visit)</label>
+                                    <label>Check In Date</label>
                                     <div class="form-line">
-                                        <textarea type="text" rows="5" name="reservation_details" class="form-control no-resize auto-growth" required /></textarea>
+                                        <input type="date" name="accomodation_check_indate" required class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Check In Out</label>
+                                    <div class="form-line">
+                                        <input type="date" name="accomodation_check_out_date" required class="form-control" />
                                     </div>
                                 </div>
                             </div>
