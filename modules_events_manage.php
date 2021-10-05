@@ -8,16 +8,15 @@ checklogin();
 /* Add */
 if (isset($_POST['Add_Event'])) {
     $event_id = $sys_gen_id;
-    $event_poster = $_POST['event_poster'];
     $event_details = $_POST['event_details'];
     $event_date  = $_POST['event_date'];
     $event_cost  = $_POST['event_cost'];
-    $event_status  = $_POST['event_status'];
+    $event_status  = 'Open';
     $event_tickets  = $_POST['event_tickets'];
 
-    $query = "INSERT INTO events (event_id, event_poster, event_details, event_date, event_cost, event_status, event_tickets) VALUES(?,?,?,?,?,?,?)";
+    $query = "INSERT INTO events (event_id,  event_details, event_date, event_cost, event_status, event_tickets) VALUES(?,?,?,?,?,?)";
     $stmt = $mysqli->prepare($query);
-    $rc = $stmt->bind_param('sssssss', $event_id, $event_poster, $event_details, $event_date, $event_cost, $event_status, $event_tickets);
+    $rc = $stmt->bind_param('ssssss', $event_id, $event_details, $event_date, $event_cost, $event_status, $event_tickets);
     $stmt->execute();
     if ($stmt) {
         $success = "Event Added";
@@ -87,7 +86,8 @@ require_once('partials/head.php');
                                 <tr>
                                     <th>Date</th>
                                     <th>Entry Fee</th>
-                                    <th>Available Tickets</th>
+                                    <th>Tickets</th>
+                                    <th>Details</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,13 +100,13 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_events_manage?view=<?php echo $events->event_id; ?>">
-                                                <?php echo $events->event_date; ?>
+                                            <a href="modules_event_manage?view=<?php echo $events->event_id; ?>">
+                                                <?php echo  date('M d Y', strtotime($events->event_date));  ?>
                                             </a>
                                         </td>
                                         <td>Ksh <?php echo $events->event_cost; ?></td>
-                                        <td><?php echo $events->event_status; ?></td>u
                                         <td><?php echo $events->event_tickets; ?></td>
+                                        <td><?php echo $events->event_details; ?></td>
                                     </tr>
                                 <?php
                                 } ?>
@@ -148,6 +148,14 @@ require_once('partials/head.php');
                                     <label>Event Tickets</label>
                                     <div class="form-line">
                                         <input type="text" name="event_tickets" required class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Event Details (What Is This Event About)</label>
+                                    <div class="form-line">
+                                        <textarea type="text" rows="5" name="event_details" class="form-control no-resize auto-growth" required /></textarea>
                                     </div>
                                 </div>
                             </div>
