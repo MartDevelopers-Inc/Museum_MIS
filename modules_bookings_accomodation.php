@@ -23,6 +23,22 @@ if (isset($_POST['Update_Reservation'])) {
     }
 }
 
+/* Vacate Guest */
+if (isset($_GET['vacate'])) {
+    $room_id = $_GET['vacate'];
+    $view = $_GET['view'];
+
+    $query = "UPDATE rooms  SET room_status ='Vacant' WHERE room_id = ?";
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param('s',  $room_id);
+    $stmt->execute();
+    if ($stmt) {
+        $success = "Accomodation Updated" && header("refresh:1; url=modules_bookings_accomodation?view=$view");
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
+
 require_once('partials/head.php');
 ?>
 
@@ -328,7 +344,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to vacate <?php echo $reservation->user_name; ?>.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_accomodation?view=<?php echo $reservation->accomodation_id; ?>&vacate=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_accomodation?view=<?php echo $reservation->accomodation_id; ?>&vacate=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Vacate </a>
                     </div>
                 </div>
             </div>
