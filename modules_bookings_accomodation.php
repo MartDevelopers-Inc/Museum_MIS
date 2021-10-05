@@ -104,7 +104,13 @@ require_once('partials/head.php');
                                     <span class="">Booked Room Rate: Ksh <?php echo $reservation->room_rate; ?></span><br>
                                     <span class="">Days Booked: <?php echo $daysreserved; ?> Day(s)</span><br>
                                     <span class="">Reservation Amount: Ksh <?php echo ($daysreserved) * ($reservation->room_rate); ?> </span><br>
-
+                                    <?php
+                                    if ($reservation->accomodation_payment_status != 'Paid') {
+                                    ?>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pay_reservation">Pay Accomodation</button>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -345,6 +351,47 @@ require_once('partials/head.php');
                         <p>Heads Up, You are about to vacate <?php echo $reservation->user_name; ?>.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
                         <a href="modules_bookings_accomodation?view=<?php echo $reservation->accomodation_id; ?>&vacate=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Vacate </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pay Reservation -->
+        <div class="modal fade" id="pay_reservation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">RESERVATION PAYMENT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Reservation Amount (Ksh)</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_amount" value="2000" required class="form-control" />
+                                            <!-- Hide This -->
+                                            <input type="hidden" name="payment_user_id" value="<?php echo $reservation->accomodation_user_id; ?>" required class="form-control" />
+                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Payment Confirmation</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="Pay_Reservation" class="btn btn-link waves-effect">SAVE</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
