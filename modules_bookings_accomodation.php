@@ -106,8 +106,12 @@ require_once('partials/head.php');
                                     $user_access_level = $_SESSION['user_access_level'];
                                     /* Only Show This If Access Level Is Admin */
                                     if ($user_access_level == 'Administrator') {
+                                        if ($reservation->room_status == 'Occupied') {
+
 
                                     ?>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#vacate_room">Vacate Room</a></li>
+                                        <?php } ?>
                                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_reservation">Delete Reservation</a></li>
                                     <?php } ?>
                                 </ul>
@@ -264,6 +268,23 @@ require_once('partials/head.php');
                                         </div>
                                     </div>
 
+                                    <div role="tabpanel" class="tab-pane" id="vacate_room">
+                                        <div class="row clearfix">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <br>
+                                                    <h2 class="text-danger text-center">
+                                                        Heads Up!, you are about to vacate a guest in room number : <?php echo $reservation->room_number; ?>.
+                                                    </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacate_modal">Vacate Guest</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -286,7 +307,28 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_accomodations?delete=<?php echo $reservation->accomodation_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_accomodations?delete=<?php echo $reservation->accomodation_id; ?>&room=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vacate Room Modal -->
+        <div class="modal fade" id="vacate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">CONFIRM</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center text-danger">
+                        <h4>Vacate Guest In Room Number : <?php echo $reservation->room_number; ?></h4>
+                        <br>
+                        <p>Heads Up, You are about to vacate <?php echo $reservation->user_name; ?>.</p>
+                        <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
+                        <a href="modules_bookings_accomodation?view=<?php echo $reservation->accomodation_id; ?>&vacate=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
