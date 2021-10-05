@@ -86,6 +86,9 @@ require_once('partials/head.php');
                                     <span class="">Booked Room Number: <?php echo $reservation->room_number; ?></span><br>
                                     <span class="">Booked Room Type: <?php echo $reservation->room_type; ?></span><br>
                                     <span class="">Booked Room Rate: Ksh <?php echo $reservation->room_rate; ?></span><br>
+                                    <span class="">Days Booked: <?php echo $daysreserved; ?> Day(s)</span><br>
+                                    <span class="">Reservation Amount: Ksh <?php echo ($daysreserved) * ($reservation->room_rate); ?> </span><br>
+
                                 </div>
                             </div>
                         </div>
@@ -157,7 +160,6 @@ require_once('partials/head.php');
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" name="Add_Reservation" class="btn btn-link waves-effect">SAVE </button>
-                                                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
                                                 </div>
                                             </form>
                                         </div>
