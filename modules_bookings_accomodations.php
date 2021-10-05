@@ -38,13 +38,24 @@ if (isset($_POST['Add_Reservation'])) {
 /* Delete Reservations */
 if (isset($_GET['delete'])) {
     $delete = $_GET['delete'];
-    $r
+    $room = $_GET['room'];
+
     $adn = "DELETE FROM accomodations WHERE accomodation_id =?";
+    $adn1 = "UPDATE rooms SET room_status = 'Vacant' WHERE room_id = ?";
+
     $stmt = $mysqli->prepare($adn);
+    $stmt_1 = $mysqli->prepare($adn1);
+
     $stmt->bind_param('s', $delete);
+    $stmt_1->bind_param('s', $room);
+
     $stmt->execute();
+    $stmt_1->execute();
+
     $stmt->close();
-    if ($stmt) {
+    $stmt_1->close();
+
+    if ($stmt && $stmt_1) {
         $success = "Deleted" && header("refresh:1; url=modules_bookings_accomodations");
     } else {
         $err = "Please Try Again Later";
