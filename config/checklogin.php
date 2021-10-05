@@ -9,7 +9,7 @@ function checklogin()
 	) {
 		$host = $_SERVER['HTTP_HOST'];
 		$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$extra = "../index";
+		$extra = "";
 		$_SESSION["user_id"] = "";
 		$_SESSION["user_email"] = "";
 		$_SESSION["user_access_level"] = "";
