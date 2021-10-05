@@ -10,12 +10,11 @@ if (isset($_POST['Update_Event'])) {
     $event_details = $_POST['event_details'];
     $event_date  = $_POST['event_date'];
     $event_cost  = $_POST['event_cost'];
-    $event_status  = $_POST['event_status'];
     $event_tickets  = $_POST['event_tickets'];
 
-    $query = "UPDATE  events SET event_details =?, event_date =?, event_cost =?, event_status =?, event_tickets =? WHERE event_id= ?";
+    $query = "UPDATE  events SET event_details =?, event_date =?, event_cost =?, event_tickets =? WHERE event_id= ?";
     $stmt = $mysqli->prepare($query);
-    $rc = $stmt->bind_param('ssssss', $event_details, $event_date, $event_cost, $event_status, $event_tickets, $event_id);
+    $rc = $stmt->bind_param('sssss', $event_details, $event_date, $event_cost, $event_tickets, $event_id);
     $stmt->execute();
     if ($stmt) {
         $success = "Event Updated";
@@ -106,7 +105,49 @@ require_once('partials/head.php');
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="event_settings">
                                         <div class="wrap-reset">
-
+                                            <form method="POST">
+                                                <div class="modal-body">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Event Date</label>
+                                                                <div class="form-line">
+                                                                    <input value="<?php echo $event->event_date; ?>" type="date" name="event_date" required class="form-control" />
+                                                                    <!-- Event Date -->
+                                                                    <input value="<?php echo $event->event_id; ?>" type="hidden" name="event_id" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Event Entry Fee (Ksh)</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" value="<?php echo $event->event_cost; ?>" name="event_cost" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Event Tickets</label>
+                                                                <div class="form-line">
+                                                                    <input type="text" name="event_tickets" value="<?php echo $event->event_tickets; ?>" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Event Details (What Is This Event About)</label>
+                                                                <div class="form-line">
+                                                                    <textarea type="text" rows="5" name="event_details" class="form-control no-resize auto-growth" required /><?php echo $event->event_details; ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="Update_Event" class="btn btn-link waves-effect">SAVE </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
 
