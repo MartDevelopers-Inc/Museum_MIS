@@ -23,6 +23,24 @@ if (isset($_POST['Update_Reservation'])) {
 }
 
 /* Pay Reservation */
+if (isset($_POST['Pay_Reservation'])) {
+    $payment_id = $sys_gen_id;
+    $payment_user_id = $_POST['payment_user_id'];
+    $payment_amount = $_POST['payment_amount'];
+    $payment_confirmation_code = $_POST['payment_confirmation_code'];
+    $payment_service_paid_id = $_POST['payment_service_paid_id'];
+
+    $query = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
+    $stmt = $mysqli->prepare($query);
+    $rc = $stmt->bind_param('ssssss',  $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $stmt->execute();
+    if ($stmt) {
+        $success = "Reservation Payment Posted";
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
+
 
 /* Approve Reservation */
 if (isset($_GET['Approve_Reservation'])) {
@@ -100,6 +118,13 @@ require_once('partials/head.php');
                                         <?php echo $reservation->reservation_details; ?>
                                     </span>
                                     <br>
+                                    <?php
+                                    if ($reservation->reservation_payment_status != 'Paid') {
+                                    ?>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pay_reservation">Pay Reservation</button>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -323,6 +348,48 @@ require_once('partials/head.php');
                         <p>Heads Up, You are about to approve this reservation record</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
                         <a href="modules_bookings_reservation?view=<?php echo $reservation->reservation_id; ?>&Approve_Reservation=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Approve </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pay Reservation -->
+        <div class="modal fade" id="pay_reservation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">RESERVATION PAYMENT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Reservation Amount (Ksh)</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_amount" value="2000" required class="form-control" />
+                                            <!-- Hide This -->
+                                            <input type="hidden" name="payment_user_id" value="<?php echo $reservation->reservation_user_id; ?>" required class="form-control" />
+                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Payment Confirmation</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="Pay_Reservation" class="btn btn-link waves-effect">SAVE</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
