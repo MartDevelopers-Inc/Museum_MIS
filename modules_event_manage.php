@@ -231,7 +231,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this event.This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_event_manage?delete=<?php echo $event->event_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_events_manage?delete=<?php echo $event->event_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
