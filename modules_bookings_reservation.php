@@ -30,11 +30,22 @@ if (isset($_POST['Pay_Reservation'])) {
     $payment_confirmation_code = $_POST['payment_confirmation_code'];
     $payment_service_paid_id = $_POST['payment_service_paid_id'];
 
+    /* Update Payment Status */
+    $reservation_payment_status = 'Paid';
+
     $query = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
+    $payment = "UPDATE reservations SET reservation_payment_status = ? WHERE reservation_id = ?";
+
     $stmt = $mysqli->prepare($query);
-    $rc = $stmt->bind_param('ssssss',  $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $paystmt = $mysqli->prepare($payment);
+
+    $rc = $stmt->bind_param('sssss',  $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $rc = $paystmt->bind_param('ss', $reservation_payment_status, $payment_service_paid_id);
+
     $stmt->execute();
-    if ($stmt) {
+    $paystmt->execute();
+
+    if ($stmt && $paystmt) {
         $success = "Reservation Payment Posted";
     } else {
         $info = "Please Try Again Or Try Later";
@@ -253,9 +264,7 @@ require_once('partials/head.php');
                                                             <div class="row" style="border-radius: 0px;">
                                                                 <div class="col-md-12 text-right">
                                                                     <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment_details->payment_amount; ?></p>
-                                                                    <p class="text-right">Discout: 12.9%</p>
-                                                                    <p class="text-right">VAT: 12.9%</p>
-                                                                    <hr>
+                                                                   <hr>
                                                                     <h3 class="text-right">Ksh: <?php echo $payment_details->payment_amount; ?></h3>
                                                                 </div>
                                                             </div>
