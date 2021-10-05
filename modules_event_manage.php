@@ -2,6 +2,7 @@
 session_start();
 require_once('config/config.php');
 require_once('config/checklogin.php');
+require_once('config/codeGen.php');
 checklogin();
 
 /* Update Event Details */
@@ -24,7 +25,37 @@ if (isset($_POST['Update_Event'])) {
 }
 
 /* Get User Ticket */
+if (isset($_POST['Add_Ticket'])) {
+    $ticket_id = $sys_gen_id;
+    $ticket_user_id = $_POST['ticket_user_id'];
+    $ticket_event_id  = $_POST['ticket_event_id'];
+    $ticket_payment_status  = 'Paid';
+    $ticket_purchased_on  = date('M,d Y');
 
+    /* Payment Details */
+    $payment_id = $sys_gen_id_alt_1;
+    $payment_user_id = $_POST['ticket_user_id'];
+    $payment_amount = $_POST['payment_amount'];
+    $payment_confirmation_code = $_POST['payment_confirmation_code'];
+    $payment_service_paid_id = $_POST['ticket_event_id'];
+
+    $query = "INSERT INTO  tickets(ticket_id, ticket_user_id, ticket_event_id, ticket_payment_status, ticket_purchased_on) VALUES(?,?,?,?,?)";
+    $payment = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
+
+    $stmt = $mysqli->prepare($query);
+    $stmt_payment = $mysqli->prepare($payment);
+
+    $rc = $stmt->bind_param('sssss', $ticket_id, $ticket_user_id, $ticket_event_id, $ticket_payment_status, $ticket_purchased_on);
+    $rc = $stmt_payment->bind_param('sssss', $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $stmt->execute();
+    $stmt_payment->execute();
+
+    if ($stmt && $stmt_payment) {
+        $success = "Ticket Purchased";
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
 require_once('partials/head.php');
 ?>
 
@@ -79,6 +110,9 @@ require_once('partials/head.php');
                                     <span class="">Event Details: <br>
                                         <?php echo $event->event_details;  ?></span>
                                     <br>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#purchase_ticket">Purchase Ticket</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +208,6 @@ require_once('partials/head.php');
                                                 ?>
                                                     <tr>
                                                         <td>
-                                                        <td>
                                                             Name : <?php echo $tickets->user_name; ?><br>
                                                             Phone : <?php echo $tickets->user_phone; ?><br>
                                                             Email : <?php echo $tickets->user_email; ?>
@@ -232,6 +265,64 @@ require_once('partials/head.php');
                         <p>Heads Up, You are about to delete this event.This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
                         <a href="modules_events_manage?delete=<?php echo $event->event_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Purchase Ticket -->
+        <div class="modal fade" id="purchase_ticket" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Purchase Ticket</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Member Name</label>
+                                        <div class="form-line">
+                                            <select type="text" name="ticket_user_id" required class="form-control show-tick">
+                                                <?php
+                                                $ret = "SELECT * FROM users WHERE user_access_level = 'Member'  ";
+                                                $stmt = $mysqli->prepare($ret);
+                                                $stmt->execute(); //ok
+                                                $res = $stmt->get_result();
+                                                while ($users = $res->fetch_object()) {
+                                                ?>
+                                                    <option value="<?php echo $users->user_id; ?>"><?php echo $users->user_name; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <input value="<?php echo $event->event_id; ?>" type="hidden" name="ticket_event_id" required class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Ticket Cost(Ksh)</label>
+                                        <div class="form-line">
+                                            <input type="text" readonly name="payment_amount" value="<?php echo $event->event_cost; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Payment Conformation Code</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" name="Add_Ticket" class="btn btn-link waves-effect">SAVE </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
