@@ -39,6 +39,36 @@ if (isset($_GET['vacate'])) {
     }
 }
 
+/* Pay Resevation */
+if (isset($_POST['Pay_Reservation'])) {
+    $payment_id = $sys_gen_id;
+    $payment_user_id = $_POST['payment_user_id'];
+    $payment_amount = $_POST['payment_amount'];
+    $payment_confirmation_code = $_POST['payment_confirmation_code'];
+    $payment_service_paid_id = $_POST['payment_service_paid_id'];
+
+    /* Update Payment Status */
+    $reservation_payment_status = 'Paid';
+
+    $query = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
+    $payment = "UPDATE accomodations SET accomodation_payment_status = ? WHERE accomodation_id = ?";
+
+    $stmt = $mysqli->prepare($query);
+    $paystmt = $mysqli->prepare($payment);
+
+    $rc = $stmt->bind_param('sssss',  $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $rc = $paystmt->bind_param('ss', $reservation_payment_status, $payment_service_paid_id);
+
+    $stmt->execute();
+    $paystmt->execute();
+
+    if ($stmt && $paystmt) {
+        $success = "Guest Room Reservation Payment Posted";
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
+
 require_once('partials/head.php');
 ?>
 
@@ -370,9 +400,9 @@ require_once('partials/head.php');
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Reservation Amount (Ksh)</label>
+                                        <label>Accomodation Amount (Ksh)</label>
                                         <div class="form-line">
-                                            <input type="text" name="payment_amount" value="2000" required class="form-control" />
+                                            <input type="text" name="payment_amount" value="<?php echo ($daysreserved) * ($reservation->room_rate); ?>" required class="form-control" />
                                             <!-- Hide This -->
                                             <input type="hidden" name="payment_user_id" value="<?php echo $reservation->accomodation_user_id; ?>" required class="form-control" />
                                             <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
@@ -381,7 +411,7 @@ require_once('partials/head.php');
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Payment Confirmation</label>
+                                        <label>Payment Confirmation Codes</label>
                                         <div class="form-line">
                                             <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
                                         </div>
