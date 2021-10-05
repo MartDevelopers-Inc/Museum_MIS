@@ -181,6 +181,7 @@ require_once('partials/head.php');
                                                                 <div class="form-line">
                                                                     <select type="text" name="accomodation_room_id" required class="form-control show-tick">
                                                                         <option value="<?php echo $reservation->room_id; ?>"><?php echo $reservation->room_number; ?></option>
+                                                                        
                                                                         <?php
                                                                         $ret = "SELECT * FROM rooms WHERE room_status = 'Vacant'  ";
                                                                         $stmt = $mysqli->prepare($ret);
