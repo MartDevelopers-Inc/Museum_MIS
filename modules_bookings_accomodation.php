@@ -71,7 +71,7 @@ require_once('partials/head.php');
         $checkout = strtotime($reservation->accomodation_check_out_date);
         $days_reserved = $checkout - $checkin;
         round($days_reserved / (60 * 60 * 24));
-        $daysreserved = round($days_reserved / (60 * 60 * 24));
+        $daysreserved = abs(round($days_reserved / (60 * 60 * 24)));
     ?>
         <section class="content profile-page">
             <div class="container-fluid">

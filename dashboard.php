@@ -162,8 +162,8 @@ require_once('partials/head.php');
                                 </thead>
                                 <tbody class="no-border-x">
                                     <?php
-                                    $ret = "SELECT * FROM  accomodations a
-                                    INNER JOIN users u ON a.accomodation_id  = u.user_id 
+                                    $ret = "SELECT * FROM accomodations a INNER JOIN 
+                                    users u ON u.user_id = a.accomodation_user_id 
                                     INNER JOIN rooms r ON r.room_id = a.accomodation_room_id";
                                     $stmt = $mysqli->prepare($ret);
                                     $stmt->execute(); //ok
@@ -190,9 +190,9 @@ require_once('partials/head.php');
                                                 <td class="text-success">Paid</td>
                                             <?php } else {
                                             ?>
-                                                <td class="text-success">Pending</td>
+                                                <td class="text-primary">Pending</td>
                                             <?php } ?>
-                                            <td class="actions"><a href="#" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
+                                            <td class="actions"><a href="modules_bookings_accomodation?view=<?php echo $reservations->accomodation_id; ?>" class="icon"><i class="zmdi zmdi-eye"></i></a></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
