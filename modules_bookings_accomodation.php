@@ -124,7 +124,7 @@ require_once('partials/head.php');
                                                                 <label>Room Number</label>
                                                                 <div class="form-line">
                                                                     <select type="text" name="accomodation_room_id" required class="form-control show-tick">
-                                                                        <option value="<?php echo $reservations->room_id; ?>"><?php echo $reservations->room_number; ?></option>
+                                                                        <option value="<?php echo $reservation->room_id; ?>"><?php echo $reservation->room_number; ?></option>
                                                                         <?php
                                                                         $ret = "SELECT * FROM rooms WHERE room_status = 'Vacant'  ";
                                                                         $stmt = $mysqli->prepare($ret);
@@ -142,7 +142,7 @@ require_once('partials/head.php');
                                                             <div class="form-group">
                                                                 <label>Check In Date</label>
                                                                 <div class="form-line">
-                                                                    <input type="date" value="<?php echo $reservations->accomodation_check_indate; ?>" name="accomodation_check_indate" required class="form-control" />
+                                                                    <input type="date" value="<?php echo $reservation->accomodation_check_indate; ?>" name="accomodation_check_indate" required class="form-control" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -150,9 +150,9 @@ require_once('partials/head.php');
                                                             <div class="form-group">
                                                                 <label>Check In Out</label>
                                                                 <div class="form-line">
-                                                                    <input type="date" value="<?php echo $reservations->accomodation_check_out_date; ?>" name="accomodation_check_out_date" required class="form-control" />
+                                                                    <input type="date" value="<?php echo $reservation->accomodation_check_out_date; ?>" name="accomodation_check_out_date" required class="form-control" />
                                                                     <!-- Hide This -->
-                                                                    <input type="hidden" value="<?php echo $reservations->accomodation_id; ?>" name="accomodation_id" required class="form-control" />
+                                                                    <input type="hidden" value="<?php echo $reservation->accomodation_id; ?>" name="accomodation_id" required class="form-control" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -286,7 +286,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_accomodation?delete=<?php echo $reservations->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_accomodations?delete=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
