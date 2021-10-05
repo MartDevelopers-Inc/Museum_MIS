@@ -159,7 +159,7 @@ require_once('partials/head.php');
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" name="Add_Reservation" class="btn btn-link waves-effect">SAVE </button>
+                                                    <button type="submit" name="Update_Reservation" class="btn btn-link waves-effect">SAVE </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -286,7 +286,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_bookings_accomodations?delete=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_bookings_accomodations?delete=<?php echo $reservation->accomodation_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>

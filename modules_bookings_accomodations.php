@@ -13,12 +13,21 @@ if (isset($_POST['Add_Reservation'])) {
     $accomodation_room_id = $_POST['accomodation_room_id'];
     $accomodation_payment_status = 'Pending';
     $accomodation_check_out_date = $_POST['accomodation_check_out_date'];
+    $room_status = 'Occupied';
 
     $query = "INSERT INTO accomodations (accomodation_id, accomodation_user_id, accomodation_check_indate, accomodation_room_id, accomodation_payment_status, accomodation_check_out_date) VALUES(?,?,?,?,?,?)";
+    $status = "UPDATE rooms SET room_status =? WHERE room_id = ?";
+
     $stmt = $mysqli->prepare($query);
+    $status_stmt = $mysqli->prepare($status);
+
     $rc = $stmt->bind_param('ssssss', $accomodation_id, $accomodation_user_id, $accomodation_check_indate, $accomodation_room_id, $accomodation_payment_status, $accomodation_check_out_date);
+    $rc = $status_stmt->bind_param('ss', $room_status, $accomodation_room_id);
+
     $stmt->execute();
-    if ($stmt) {
+    $status_stmt->execute();
+
+    if ($stmt && $status_stmt) {
         $success = "Reservation Posted";
     } else {
         $info = "Please Try Again Or Try Later";
@@ -29,6 +38,7 @@ if (isset($_POST['Add_Reservation'])) {
 /* Delete Reservations */
 if (isset($_GET['delete'])) {
     $delete = $_GET['delete'];
+    $r
     $adn = "DELETE FROM accomodations WHERE accomodation_id =?";
     $stmt = $mysqli->prepare($adn);
     $stmt->bind_param('s', $delete);
