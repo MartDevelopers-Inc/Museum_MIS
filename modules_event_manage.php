@@ -152,7 +152,41 @@ require_once('partials/head.php');
                                     </div>
 
                                     <div role="tabpanel" class="tab-pane" id="ticket_purchases">
-
+                                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Member Details</th>
+                                                    <th>Ticket Payment </th>
+                                                    <th>Date Purchased</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $ret = "SELECT * FROM tickets t
+                                                INNER JOIN events e ON t.ticket_event_id = e.event_id
+                                                INNER JOIN users s ON s.user_id = t.ticket_user_id
+                                                WHERE e.event_id = '$view'
+                                                  ";
+                                                $stmt = $mysqli->prepare($ret);
+                                                $stmt->execute(); //ok
+                                                $res = $stmt->get_result();
+                                                while ($tickets = $res->fetch_object()) {
+                                                ?>
+                                                    <tr>
+                                                        <td>
+                                                        <td>
+                                                            Name : <?php echo $tickets->user_name; ?><br>
+                                                            Phone : <?php echo $tickets->user_phone; ?><br>
+                                                            Email : <?php echo $tickets->user_email; ?>
+                                                        </td>
+                                                        </td>
+                                                        <td><?php echo $tickets->ticket_payment_status; ?></td>
+                                                        <td><?php echo $tickets->ticket_purchased_on; ?></td>
+                                                    </tr>
+                                                <?php
+                                                } ?>
+                                            </tbody>
+                                        </table>
                                     </div>
 
 
