@@ -200,11 +200,11 @@ require_once('partials/head.php');
                         </button>
                     </div>
                     <div class="modal-body text-center text-danger">
-                        <h4>Delete Event</h4>
+                        <h4>Delete Event Ticket</h4>
                         <br>
-                        <p>Heads Up, You are about to delete this event.This action is irrevisble.</p>
+                        <p>Heads Up, You are about to delete this event ticket.This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_events_manage?delete=<?php echo $event->event_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_events_ticket?delete=<?php echo $ticket->ticket_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>
