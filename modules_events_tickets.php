@@ -66,7 +66,6 @@ require_once('partials/head.php');
                                     <th>Event Date</th>
                                     <th>Entry Fee</th>
                                     <th>Member Details</th>
-                                    <th>Event Details</th>
                                     <th>Date Purchased</th>
                                 </tr>
                             </thead>
@@ -86,10 +85,13 @@ require_once('partials/head.php');
                                                 <?php echo  date('M d Y', strtotime($tickets->event_date));  ?>
                                             </a>
                                         </td>
-                                        
-                                        <td>Ksh <?php echo $events->event_cost; ?></td>
-                                        <td><?php echo $events->event_tickets; ?></td>
-                                        <td><?php echo $events->event_details; ?></td>
+                                        <td>
+                                            Name : <?php echo $tickets->user_name; ?><br>
+                                            Phone : <?php echo $tickets->user_phone; ?><br>
+                                            Email : <?php echo $tickets->user_email; ?>
+                                        </td>
+                                        <td>Ksh <?php echo $tickets->event_cost; ?></td>
+                                        <td><?php echo $tickets->ticket_purchased_on; ?></td>
                                     </tr>
                                 <?php
                                 } ?>
