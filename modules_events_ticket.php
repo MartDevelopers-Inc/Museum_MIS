@@ -55,7 +55,7 @@ require_once('partials/head.php');
                             <div class="profile-header">
                                 <div class="profile_info">
                                     <div class="profile-image"> <img src="assets/images/event.png" alt=""> </div>
-                                    <span class="">Event Date: <?php echo  date('M d Y', strtotime($event->event_date));  ?></span><br>
+                                    <span class="">Event Date: <?php echo  date('M d Y', strtotime($ticket->event_date));  ?></span><br>
                                     <span class="">Entry Fee: Ksh <?php echo $ticket->event_cost;  ?></span><br>
                                     <hr>
                                     <span class="">Event Details: <br>
@@ -106,7 +106,7 @@ require_once('partials/head.php');
                                                                 </div>
                                                                 <div class="col-md-6 col-sm-6 text-right">
                                                                     <p><strong>Event Date : </strong><?php echo date('d, M Y', strtotime($ticket->event_date)); ?></p>
-                                                                    <p><strong>Date Purchased : </strong><?php echo date('d, M Y', strtotime($ticket->ticket_purchased_on)); ?></p>
+                                                                    <p><strong>Date Purchased : </strong><?php echo $ticket->ticket_purchased_on; ?></p>
                                                                 </div>
                                                             </div>
                                                             <div class="mt-40"></div>
@@ -163,7 +163,7 @@ require_once('partials/head.php');
                                         </div>
                                     </div>
 
-                                    <div role="tabpanel" class="tab-pane" id="delete_event">
+                                    <div role="tabpanel" class="tab-pane" id="delete_ticket">
                                         <div class="row clearfix">
                                             <div class="modal-body">
                                                 <div class="row clearfix">
@@ -204,7 +204,7 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to delete this event ticket.This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="modules_events_ticket?delete=<?php echo $ticket->ticket_id; ?>" class="text-center btn btn-danger"> Delete </a>
+                        <a href="modules_events_tickets?delete=<?php echo $ticket->ticket_id; ?>" class="text-center btn btn-danger"> Delete </a>
                     </div>
                 </div>
             </div>

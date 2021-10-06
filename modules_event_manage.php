@@ -37,7 +37,7 @@ if (isset($_POST['Add_Ticket'])) {
     $payment_user_id = $_POST['ticket_user_id'];
     $payment_amount = $_POST['payment_amount'];
     $payment_confirmation_code = $_POST['payment_confirmation_code'];
-    $payment_service_paid_id = $_POST['ticket_event_id'];
+    $payment_service_paid_id = $ticket_id;
 
     $query = "INSERT INTO  tickets(ticket_id, ticket_user_id, ticket_event_id, ticket_payment_status, ticket_purchased_on) VALUES(?,?,?,?,?)";
     $payment = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
