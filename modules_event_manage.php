@@ -52,7 +52,7 @@ if (isset($_POST['Add_Ticket'])) {
 
     if ($stmt && $stmt_payment) {
         $success = "Ticket Purchased";
-    } else {
+    } else {                                                                                                                                                                            
         $info = "Please Try Again Or Try Later";
     }
 }
