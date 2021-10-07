@@ -75,7 +75,7 @@ if (isset($_POST['Update_Membership'])) {
 }
 
 /*Pay Membeship Package  */
-if (isset($_POST['Pay_Reservation'])) {
+if (isset($_POST['Pay_Membership_Package'])) {
     $payment_id = $sys_gen_id;
     $payment_user_id = $_POST['payment_user_id'];
     $payment_amount = $_POST['payment_amount'];
@@ -168,6 +168,7 @@ require_once('partials/head.php');
                                     <span class="">Membership Package: <?php echo $hrm->package_name;  ?></span><br>
                                     <span class="">Package Rate: Ksh <?php echo $hrm->package_pricing;  ?></span><br>
                                     <span class="">Member Since : <?php echo $hrm->user_created_on;  ?></span><br>
+                                    <span class="">Membership Package Payment Status : <?php echo $hrm->user_membership_package_payment_status;  ?></span><br>
                                     <hr>
                                     <?php if ($hrm->user_membership_package_payment_status == 'Pending') { ?>
                                         <!-- Pay Membership Fee -->
@@ -389,7 +390,7 @@ require_once('partials/head.php');
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" name="Pay_Booking" class="btn btn-link waves-effect">SAVE</button>
+                                <button type="submit" name="Pay_Membership_Package" class="btn btn-link waves-effect">SAVE</button>
                             </div>
                         </form>
                     </div>

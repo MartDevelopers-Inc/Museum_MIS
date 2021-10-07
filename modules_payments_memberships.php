@@ -51,7 +51,7 @@ require_once('partials/head.php');
                             <li class="breadcrumb-item"><a href="dashboard">Payments</a></li>
                             <li class="breadcrumb-item active">Membership</li>
                         </ul>
-                        
+
                     </div>
                 </div>
             </div>
@@ -70,9 +70,9 @@ require_once('partials/head.php');
                             <tbody>
                                 <?php
                                 $ret = "SELECT * FROM payments p
-                                INNER JOIN users u ON p.payment_user_id = u.user_id
-                                INNER JOIN  user_membership_package ump ON ump.user_membership_package_user_id = u.user_id
-                                INNER JOIN membership_packages mp ON mp.package_id = p.payment_service_paid_id
+                                INNER JOIN user_membership_package ump ON p.payment_service_paid_id = ump.user_membership_package_id
+                                INNER JOIN users u ON u.user_id = ump.user_membership_package_user_id
+                                INNER JOIN membership_packages mp ON mp.package_id = ump.user_membership_package_package_id
                                 ";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
@@ -82,9 +82,9 @@ require_once('partials/head.php');
                                     <tr>
                                         <td>
                                             <a href="modules_payments_memberships?view=<?php echo $payments->payment_id; ?>">
-                                                Name : <?php echo $payments->user_name; ?>
-                                                Email : <?php echo $payments->user_email; ?>
-                                                Phone : <?php echo $payments->user_phone; ?>
+                                                Name : <?php echo $payments->user_name; ?> <br>
+                                                Email : <?php echo $payments->user_email; ?> <br>
+                                                Phone : <?php echo $payments->user_phone; ?> <br>
                                             </a>
                                         </td>
                                         <td>
@@ -94,7 +94,7 @@ require_once('partials/head.php');
                                         <td>
                                             Confirmation ID : <?php echo $payments->payment_confirmation_code; ?><br>
                                             Amount Paid : Ksh <?php echo $payments->payment_amount; ?><br>
-                                            Date Paid: <?php echo date('M, d y g:ia', strtotime($payments->payments->payment_created_at)); ?>
+                                            Date Paid: <?php echo date('M, d y g:ia', strtotime($payments->payment_created_at)); ?>
                                         </td>
                                     </tr>
                                 <?php
