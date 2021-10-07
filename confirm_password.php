@@ -6,25 +6,25 @@ require_once('../config/codeGen.php');
 /* Reset Password */
 if (isset($_POST['Confirm_Password'])) {
 
-    $user_email = $_POST['user_email'];
-    $query = mysqli_query($mysqli, "SELECT * FROM `users` WHERE user_mail = '" . $user_email . "' ");
-    $num_rows = mysqli_num_rows($query);
-
-    if ($num_rows > 0) {
-        $n = date('y'); //Load Mumble Jumble
-        $new_password = bin2hex(random_bytes($n));
-        $query = "UPDATE users SET  user_password=? WHERE  user_email =? ";
+    $user_email  = $_SESSION['user_email'];
+    $new_password = sha1(md5($_POST['new_password']));
+    $confirm_password = sha1(md5($_POST['confirm_password']));
+    /* Check If Passwords Match */
+    if ($new_password != $confirm_password) {
+        /* Die */
+        $err = "Passwords Does Not Match";
+    } else {
+        /* Update Password */
+        $query = "UPDATE users  SET  user_password =? WHERE  user_email = ? ";
         $stmt = $mysqli->prepare($query);
-        $rc = $stmt->bind_param('ss', $new_password, $user_email);
+        //bind paramaters
+        $rc = $stmt->bind_param('ss',  $confirm_password, $user_email);
         $stmt->execute();
         if ($stmt) {
-            $_SESSION['user_email'] = $user_email;
-            $success = "Password Reset" && header("refresh:1; url=confirm_password");
+            $success = "Password Reset" && header("refresh:1; url=index");
         } else {
-            $err = "Password reset failed";
+            $err = "Password Reset Failed";
         }
-    } else {
-        $err = "User Account Does Not Exist";
     }
 }
 require_once('partials/head.php');
