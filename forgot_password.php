@@ -1,5 +1,32 @@
 <?php
-require_once('config/config.php');
+session_start();
+require_once('../config/config.php');
+require_once('../config/codeGen.php');
+
+/* Reset Password */
+if (isset($_POST['Reset_Password'])) {
+
+    $user_email = $_POST['user_email'];
+    $query = mysqli_query($mysqli, "SELECT * FROM `users` WHERE user_mail = '" . $user_email . "' ");
+    $num_rows = mysqli_num_rows($query);
+
+    if ($num_rows > 0) {
+        $n = date('y'); //Load Mumble Jumble
+        $new_password = bin2hex(random_bytes($n));
+        $query = "UPDATE users SET  user_password=? WHERE  user_email =? ";
+        $stmt = $mysqli->prepare($query);
+        $rc = $stmt->bind_param('ss', $new_password, $user_email);
+        $stmt->execute();
+        if ($stmt) {
+            $_SESSION['user_email'] = $user_email;
+            $success = "Password Reset" && header("refresh:1; url=confirm_password");
+        } else {
+            $err = "Password reset failed";
+        }
+    } else {
+        $err = "User Account Does Not Exist";
+    }
+}
 require_once('partials/head.php');
 ?>
 
