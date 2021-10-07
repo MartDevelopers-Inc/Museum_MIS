@@ -4,6 +4,23 @@ require_once('config/config.php');
 require_once('config/checklogin.php');
 require_once('config/codeGen.php');
 checklogin();
+
+/* Delete Payment */
+if (isset($_GET['delete'])) {
+    $delete = $_GET['delete'];
+    $adn = "DELETE FROM payments WHERE payment_id =?";
+    $stmt = $mysqli->prepare($adn);
+    $stmt->bind_param('s', $delete);
+    $stmt->execute();
+    $stmt->close();
+    if ($stmt) {
+        $success = "Deleted" && header("refresh:1; url=modules_payments_resevations");
+    } else {
+        $err = "Please Try Again Later";
+    }
+}
+
+
 require_once('partials/head.php');
 ?>
 
@@ -28,11 +45,11 @@ require_once('partials/head.php');
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-7">
-                        <h2>Payments - Membership Fee Payments</h2>
+                        <h2>Payments - Museum Visit Resevations Payments</h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="home">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="home">Payments</a></li>
-                            <li class="breadcrumb-item active">Membership</li>
+                            <li class="breadcrumb-item"><a href="">Payments</a></li>
+                            <li class="breadcrumb-item active">Visit Reservations</li>
                         </ul>
 
                     </div>
@@ -46,7 +63,7 @@ require_once('partials/head.php');
                             <thead>
                                 <tr>
                                     <th>Member Details</th>
-                                    <th>Membership Package</th>
+                                    <th>Resevations Details</th>
                                     <th>Payment Details</th>
                                 </tr>
                             </thead>
@@ -54,10 +71,9 @@ require_once('partials/head.php');
                                 <?php
                                 $user_id = $_SESSION['user_id'];
                                 $ret = "SELECT * FROM payments p
-                                INNER JOIN user_membership_package ump ON p.payment_service_paid_id = ump.user_membership_package_id
-                                INNER JOIN users u ON u.user_id = ump.user_membership_package_user_id
-                                INNER JOIN membership_packages mp ON mp.package_id = ump.user_membership_package_package_id
-                                WHERE user_id = '$user_id'
+                                INNER JOIN reservations r ON p.payment_service_paid_id = r.reservation_id
+                                INNER JOIN users u ON u.user_id = p.payment_user_id
+                                WHERE u.user_id = '$user_id'
                                 ";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
@@ -66,15 +82,15 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="membership_packages_payment?view=<?php echo $payments->payment_id; ?>&service=<?php echo $payments->payment_service_paid_id; ?>">
+                                            <a href="reservations_payment?view=<?php echo $payments->payment_id; ?>&service=<?php echo $payments->payment_service_paid_id; ?>">
                                                 Name : <?php echo $payments->user_name; ?> <br>
                                                 Email : <?php echo $payments->user_email; ?> <br>
                                                 Phone : <?php echo $payments->user_phone; ?> <br>
                                             </a>
                                         </td>
                                         <td>
-                                            Name : <?php echo $payments->package_name; ?><br>
-                                            Pricing : Ksh <?php echo $payments->package_pricing; ?><br>
+                                            Visit Date : <?php echo $payments->reservation_date; ?> <br>
+                                            Approval Status: <?php echo $payments->reservation_status; ?>
                                         </td>
                                         <td>
                                             Confirmation ID : <?php echo $payments->payment_confirmation_code; ?><br>

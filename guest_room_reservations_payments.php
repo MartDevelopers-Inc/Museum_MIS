@@ -4,6 +4,7 @@ require_once('config/config.php');
 require_once('config/checklogin.php');
 require_once('config/codeGen.php');
 checklogin();
+
 require_once('partials/head.php');
 ?>
 
@@ -28,11 +29,11 @@ require_once('partials/head.php');
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-7">
-                        <h2>Payments - Membership Fee Payments</h2>
+                        <h2>Payments - Guest Room Accomodations Payments</h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="home">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="home">Payments</a></li>
-                            <li class="breadcrumb-item active">Membership</li>
+                            <li class="breadcrumb-item"><a href="">Payments</a></li>
+                            <li class="breadcrumb-item active">Accomodations</li>
                         </ul>
 
                     </div>
@@ -46,7 +47,8 @@ require_once('partials/head.php');
                             <thead>
                                 <tr>
                                     <th>Member Details</th>
-                                    <th>Membership Package</th>
+                                    <th>Room Details</th>
+                                    <th>Dates</th>
                                     <th>Payment Details</th>
                                 </tr>
                             </thead>
@@ -54,10 +56,10 @@ require_once('partials/head.php');
                                 <?php
                                 $user_id = $_SESSION['user_id'];
                                 $ret = "SELECT * FROM payments p
-                                INNER JOIN user_membership_package ump ON p.payment_service_paid_id = ump.user_membership_package_id
-                                INNER JOIN users u ON u.user_id = ump.user_membership_package_user_id
-                                INNER JOIN membership_packages mp ON mp.package_id = ump.user_membership_package_package_id
-                                WHERE user_id = '$user_id'
+                                INNER JOIN accomodations a ON a.accomodation_id = p.payment_service_paid_id 
+                                INNER JOIN users u ON p.payment_user_id  = u.user_id
+                                INNER JOIN rooms r ON r.room_id = a.accomodation_room_id
+                                WHERE u.user_id = '$user_id'
                                 ";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute(); //ok
@@ -66,15 +68,20 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="membership_packages_payment?view=<?php echo $payments->payment_id; ?>&service=<?php echo $payments->payment_service_paid_id; ?>">
+                                            <a href="guest_room_reservations_payment?view=<?php echo $payments->payment_id; ?>&service=<?php echo $payments->payment_service_paid_id; ?>">
                                                 Name : <?php echo $payments->user_name; ?> <br>
                                                 Email : <?php echo $payments->user_email; ?> <br>
                                                 Phone : <?php echo $payments->user_phone; ?> <br>
                                             </a>
                                         </td>
                                         <td>
-                                            Name : <?php echo $payments->package_name; ?><br>
-                                            Pricing : Ksh <?php echo $payments->package_pricing; ?><br>
+                                            Number: <?php echo $payments->room_number; ?><br>
+                                            Category: <?php echo $payments->room_type; ?><br>
+                                            Rate: Ksh <?php echo $payments->room_rate; ?>
+                                        </td>
+                                        <td>
+                                            Check In : <?php echo date('M, d Y', strtotime($payments->accomodation_check_indate)); ?><br>
+                                            Check Out: <?php echo date('M, d Y', strtotime($payments->accomodation_check_out_date)); ?><br>
                                         </td>
                                         <td>
                                             Confirmation ID : <?php echo $payments->payment_confirmation_code; ?><br>
