@@ -137,6 +137,13 @@ require_once('partials/head.php');
                                     <span class="">Membership Package: <?php echo $hrm->package_name;  ?></span><br>
                                     <span class="">Package Rate: Ksh <?php echo $hrm->package_pricing;  ?></span><br>
                                     <span class="">Member Since : <?php echo $hrm->user_created_on;  ?></span><br>
+                                    <hr>
+                                    <?php if ($hrm->user_membership_package_payment_status == 'Pending') { ?>
+                                        <!-- Pay Membership Fee -->
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pay_membership_modal">Pay Membership Package</button>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -317,6 +324,47 @@ require_once('partials/head.php');
                 </div>
             </div>
         </div>
+        <!-- Pay Membership Package Modal -->
+        <div class="modal fade" id="pay_membership_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Pay Membership Package Subsription</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Membership Package Amount (Ksh)</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_amount" value="<?php echo $hrm->package_pricing; ?>" readonly required class="form-control" />
+                                            <!-- Hide This -->
+                                            <input type="hidden" name="payment_user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
+                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Payment Confirmation Code</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="Pay_Booking" class="btn btn-link waves-effect">SAVE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>u
     <?php } ?>
     <?php require_once('partials/scripts.php'); ?>
 </body>
