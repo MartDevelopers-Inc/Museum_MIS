@@ -2,6 +2,7 @@
 session_start();
 require_once('config/config.php');
 require_once('config/checklogin.php');
+require_once('config/codeGen.php');
 checklogin();
 
 /* Update Profile */
@@ -70,6 +71,36 @@ if (isset($_POST['Update_Membership'])) {
         $success = 'Membership Package Updated';
     } else {
         $err = 'Please Try Again Or Try Later';
+    }
+}
+
+/*Pay Membeship Package  */
+if (isset($_POST['Pay_Reservation'])) {
+    $payment_id = $sys_gen_id;
+    $payment_user_id = $_POST['payment_user_id'];
+    $payment_amount = $_POST['payment_amount'];
+    $payment_confirmation_code = $_POST['payment_confirmation_code'];
+    $payment_service_paid_id = $_POST['payment_service_paid_id'];
+
+    /* Update Payment Status */
+    $user_membership_package_payment_status = 'Paid';
+
+    $query = "INSERT INTO payments(payment_id, payment_user_id, payment_amount, payment_confirmation_code, payment_service_paid_id) VALUES(?,?,?,?,?)";
+    $payment = "UPDATE user_membership_package SET user_membership_package_payment_status  = ? WHERE user_membership_package_id = ?";
+
+    $stmt = $mysqli->prepare($query);
+    $paystmt = $mysqli->prepare($payment);
+
+    $rc = $stmt->bind_param('sssss',  $payment_id, $payment_user_id, $payment_amount, $payment_confirmation_code, $payment_service_paid_id);
+    $rc = $paystmt->bind_param('ss', $user_membership_package_payment_status, $payment_service_paid_id);
+
+    $stmt->execute();
+    $paystmt->execute();
+
+    if ($stmt && $paystmt) {
+        $success = "Membership Payment Posted";
+    } else {
+        $info = "Please Try Again Or Try Later";
     }
 }
 
@@ -329,7 +360,7 @@ require_once('partials/head.php');
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Pay Membership Package Subsription</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Pay <?php echo $hrm->user_name . ' ' . $hrm->package_name; ?> Membership Package Subsription</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -337,18 +368,18 @@ require_once('partials/head.php');
                     <div class="modal-body">
                         <form method="POST">
                             <div class="row clearfix">
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>Membership Package Amount (Ksh)</label>
                                         <div class="form-line">
                                             <input type="text" name="payment_amount" value="<?php echo $hrm->package_pricing; ?>" readonly required class="form-control" />
                                             <!-- Hide This -->
                                             <input type="hidden" name="payment_user_id" value="<?php echo $hrm->user_id; ?>" required class="form-control" />
-                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
+                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $hrm->user_membership_package_id; ?>" required class="form-control" />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>Payment Confirmation Code</label>
                                         <div class="form-line">
