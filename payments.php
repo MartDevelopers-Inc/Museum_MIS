@@ -50,7 +50,7 @@ require_once('partials/head.php');
                                         <div class="">
                                             <h4 class="m-b-5">Membership Package Payments</h4>
                                         </div>
-                                        <a href="profile.html" class="btn btn-raised btn-primary waves-effect">View Payment Record</a>
+                                        <a href="membership_packages_payments" class="btn btn-raised btn-primary waves-effect">View Payment Record</a>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@ require_once('partials/head.php');
                                         <div class="">
                                             <h4 class="m-b-5">Museum Visit Reservations</h4>
                                         </div>
-                                        <a href="profile.html" class="btn btn-raised btn-primary waves-effect">View Payment Records</a>
+                                        <a href="reservations_payments" class="btn btn-raised btn-primary waves-effect">View Payment Records</a>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@ require_once('partials/head.php');
                                         <div class="">
                                             <h4 class="m-b-5">Guest Room Reservations</h4>
                                         </div>
-                                        <a href="profile.html" class="btn btn-raised btn-primary waves-effect">View Payment Records</a>
+                                        <a href="guest_room_reservations_payments" class="btn btn-raised btn-primary waves-effect">View Payment Records</a>
                                     </div>
                                 </div>
                             </div>
