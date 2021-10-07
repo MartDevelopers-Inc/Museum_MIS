@@ -38,6 +38,12 @@ require_once('partials/head.php');
         } else {
             $url = "assets/images/$payment->user_profile_pic";
         }
+        /* Compute Accomodation Dates */
+        $checkin = strtotime($payment->accomodation_check_indate);
+        $checkout = strtotime($payment->accomodation_check_out_date);
+        $days_reserved = $checkout - $checkin;
+        round($days_reserved / (60 * 60 * 24));
+        $daysreserved = abs(round($days_reserved / (60 * 60 * 24)));
     ?>
         <section class="content profile-page">
             <div class="container-fluid">
@@ -70,6 +76,7 @@ require_once('partials/head.php');
                         </div>
                     </div>
                 </div>
+
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-1">
                         <div class="card">
@@ -89,7 +96,76 @@ require_once('partials/head.php');
                                 <!-- Tab panes -->
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="get_receipt">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="card">
+                                                <div id="print">
+                                                    <div class="header text-center">
+                                                        <h2>Museum Guest Room Reservation Payment Receipt</h2>
+                                                        <h4>Receipt # <strong><?php echo $b; ?></strong>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="body">
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <address>
+                                                                    <strong><?php echo $payment->user_name; ?></strong><br>
+                                                                    Email: <?php echo $payment->user_email; ?><br>
+                                                                    <abbr title="Phone">P:</abbr> <?php echo $payment->user_phone; ?>
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-6 text-right">
+                                                                <p><strong>Check In Date: </strong><?php echo date('d, M Y', strtotime($payment->accomodation_check_indate)); ?></p>
+                                                                <p><strong>Check Out Date: </strong><?php echo date('d, M Y', strtotime($payment->accomodation_check_out_date)); ?></p>
+                                                                <p><strong>Room Number: </strong><?php echo $payment->room_number; ?></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-40"></div>
 
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="table-responsive">
+                                                                    <table id="mainTable" class="table table-striped" style="cursor: pointer;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Payment Amount</th>
+                                                                                <th>Confirmation Code</th>
+                                                                                <th>Date Paid</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <tr>
+                                                                                <td>Ksh <?php echo $payment->payment_amount; ?></td>
+                                                                                <td><?php echo $payment->payment_confirmation_code; ?></td>
+                                                                                <td><?php echo date('M, d Y g:ia', strtotime($payment->payment_created_at)); ?></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row" style="border-radius: 0px;">
+                                                            <div class="col-md-12 text-right">
+                                                                <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment->payment_amount; ?></p>
+                                                                <p class="text-right">Room Rate : <?php echo $payment->room_rate; ?></p>
+                                                                <p class="text-right">Days Booked: <?php echo $daysreserved; ?>
+
+                                                                </p>
+                                                                <hr>
+                                                                <h3 class="text-right">Ksh: <?php echo $payment->payment_amount; ?></h3>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                    </div>
+
+                                                </div>
+                                                <div class="hidden-print col-md-12 text-right">
+                                                    <button id="print" onclick="printContent('print');" class="btn btn-raised btn-success"><i class="zmdi zmdi-print"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div role="tabpanel" class="tab-pane" id="delete_payment">
