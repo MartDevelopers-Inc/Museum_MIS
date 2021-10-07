@@ -81,7 +81,7 @@ require_once('partials/head.php');
                                 ?>
                                     <tr>
                                         <td>
-                                            <a href="modules_payments_memberships?view=<?php echo $payments->payment_id; ?>">
+                                            <a href="modules_payments_membership?view=<?php echo $payments->payment_id; ?>">
                                                 Name : <?php echo $payments->user_name; ?> <br>
                                                 Email : <?php echo $payments->user_email; ?> <br>
                                                 Phone : <?php echo $payments->user_phone; ?> <br>
