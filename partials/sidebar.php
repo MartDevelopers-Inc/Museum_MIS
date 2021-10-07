@@ -68,8 +68,6 @@
                         <li> <a href="modules_reports_members">Members</a></li>
                         <li> <a href="modules_reports_reservations">Reservations</a></li>
                         <li> <a href="modules_reports_accomodations">Accomodations</a></li>
-                        <li> <a href="modules_reports_events">Events</a></li>
-                        <li> <a href="modules_reports_payments">Payments</a></li>
                     </ul>
                 </li>
             </ul>
