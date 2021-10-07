@@ -82,6 +82,7 @@
                     </ul>
                 </li>
                 <li><a href="reservations"><i class="zmdi zmdi-calendar-check"></i><span>Reservations</span> </a> </li>
+                <li><a href="room_bookings"><i class="zmdi zmdi-calendar"></i><span>Room Bookings</span> </a> </li>
                 <li><a href="events"><i class="zmdi zmdi-alarm-check"></i><span>Events</span> </a> </li>
                 <li><a href="payments"><i class="zmdi zmdi-money-box"></i><span>Payments</span> </a> </li>
             </ul>

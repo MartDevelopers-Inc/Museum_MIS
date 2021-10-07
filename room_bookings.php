@@ -1,0 +1,211 @@
+<?php
+session_start();
+require_once('config/config.php');
+require_once('config/checklogin.php');
+require_once('config/codeGen.php');
+checklogin();
+
+/* Add Room Reservation */
+if (isset($_POST['Add_Reservation'])) {
+    $accomodation_id = $sys_gen_id;
+    $accomodation_user_id = $_SESSION['user_id'];
+    $accomodation_check_indate = $_POST['accomodation_check_indate'];
+    $accomodation_room_id = $_POST['accomodation_room_id'];
+    $accomodation_payment_status = 'Pending';
+    $accomodation_check_out_date = $_POST['accomodation_check_out_date'];
+    $room_status = 'Occupied';
+
+    $query = "INSERT INTO accomodations (accomodation_id, accomodation_user_id, accomodation_check_indate, accomodation_room_id, accomodation_payment_status, accomodation_check_out_date) VALUES(?,?,?,?,?,?)";
+    $status = "UPDATE rooms SET room_status =? WHERE room_id = ?";
+
+    $stmt = $mysqli->prepare($query);
+    $status_stmt = $mysqli->prepare($status);
+
+    $rc = $stmt->bind_param('ssssss', $accomodation_id, $accomodation_user_id, $accomodation_check_indate, $accomodation_room_id, $accomodation_payment_status, $accomodation_check_out_date);
+    $rc = $status_stmt->bind_param('ss', $room_status, $accomodation_room_id);
+
+    $stmt->execute();
+    $status_stmt->execute();
+
+    if ($stmt && $status_stmt) {
+        $success = "Reservation Posted";
+    } else {
+        $info = "Please Try Again Or Try Later";
+    }
+}
+
+
+/* Delete Reservations */
+if (isset($_GET['delete'])) {
+    $delete = $_GET['delete'];
+    $room = $_GET['room'];
+
+    $adn = "DELETE FROM accomodations WHERE accomodation_id =?";
+    $adn1 = "UPDATE rooms SET room_status = 'Vacant' WHERE room_id = ?";
+
+    $stmt = $mysqli->prepare($adn);
+    $stmt_1 = $mysqli->prepare($adn1);
+
+    $stmt->bind_param('s', $delete);
+    $stmt_1->bind_param('s', $room);
+
+    $stmt->execute();
+    $stmt_1->execute();
+
+    $stmt->close();
+    $stmt_1->close();
+
+    if ($stmt && $stmt_1) {
+        $success = "Deleted" && header("refresh:1; url=room_bookings");
+    } else {
+        $err = "Please Try Again Later";
+    }
+}
+
+require_once('partials/head.php');
+?>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <?php require_once('partials/loader.php'); ?>
+    </div>
+
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+
+    <!-- Top Bar -->
+    <?php require_once('partials/navigation.php'); ?>
+
+    <!-- Left Sidebar -->
+    <?php require_once('partials/sidebar.php'); ?>
+
+    <!-- Add Staff Modal -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="row">
+                    <div class="col-lg-12 col-md-6 col-sm-7">
+                        <h2>Museum Guest Rooms Accomodation Reservations</h2>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="home">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Accomodations</li>
+                        </ul>
+                        <div class="text-right">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">Add Guest Room Reservation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Member Details</th>
+                                    <th>Room Details</th>
+                                    <th>Dates</th>
+                                    <th>Payment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $user_id = $_SESSION['user_id'];
+                                $ret = "SELECT * FROM accomodations a INNER JOIN 
+                                users u ON u.user_id = a.accomodation_user_id 
+                                INNER JOIN rooms r ON r.room_id = a.accomodation_room_id
+                                WHERE a.accomodation_user_id = '$user_id' ";
+                                $stmt = $mysqli->prepare($ret);
+                                $stmt->execute(); //ok
+                                $res = $stmt->get_result();
+                                while ($reservations = $res->fetch_object()) {
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <a href="room_booking?view=<?php echo $reservations->accomodation_id; ?>">
+                                                Name: <?php echo $reservations->user_name; ?><br>
+                                                Email: <?php echo $reservations->user_email; ?><br>
+                                                Contact: <?php echo $reservations->user_phone; ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            No : <?php echo $reservations->room_number; ?><br>
+                                            Type : <?php echo $reservations->room_type; ?>
+                                        </td>
+                                        <td>
+                                            Check In : <?php echo date('d, M Y', strtotime($reservations->accomodation_check_indate)); ?><br>
+                                            Check Out : <?php echo date('d, M Y', strtotime($reservations->accomodation_check_out_date)); ?>
+                                        </td>
+                                        <td><?php echo $reservations->accomodation_payment_status; ?></td>
+                                    </tr>
+                                <?php
+                                } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Add Modal -->
+    <div class="modal fade" id="add_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="largeModalLabel">Add Guest Room Reservation</h4>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
+                        <div class="row clearfix">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Room Number</label>
+                                    <div class="form-line">
+                                        <select type="text" name="accomodation_room_id" required class="form-control show-tick">
+                                            <?php
+                                            $ret = "SELECT * FROM rooms WHERE room_status = 'Vacant'  ";
+                                            $stmt = $mysqli->prepare($ret);
+                                            $stmt->execute(); //ok
+                                            $res = $stmt->get_result();
+                                            while ($rooms = $res->fetch_object()) {
+                                            ?>
+                                                <option value="<?php echo $rooms->room_id; ?>"><?php echo $rooms->room_number; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Check In Date</label>
+                                    <div class="form-line">
+                                        <input type="date" name="accomodation_check_indate" required class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Check In Out</label>
+                                    <div class="form-line">
+                                        <input type="date" name="accomodation_check_out_date" required class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="Add_Reservation" class="btn btn-link waves-effect">SAVE </button>
+                        <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <?php require_once('partials/scripts.php'); ?>
+</body>
+
+</html>

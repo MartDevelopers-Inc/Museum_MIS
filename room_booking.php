@@ -7,16 +7,17 @@ checklogin();
 
 /* Update Reservation Details */
 if (isset($_POST['Update_Reservation'])) {
-    $reservation_id = $_POST['reservation_id'];
-    $reservation_date = $_POST['reservation_date'];
-    $reservation_details = $_POST['reservation_details'];
+    $accomodation_id = $_POST['accomodation_id'];
+    $accomodation_check_indate = $_POST['accomodation_check_indate'];
+    $accomodation_room_id = $_POST['accomodation_room_id'];
+    $accomodation_check_out_date = $_POST['accomodation_check_out_date'];
 
-    $query = "UPDATE  reservations SET reservation_date =?, reservation_details =? WHERE reservation_id = ?";
+    $query = "UPDATE accomodations  SET accomodation_check_indate =?, accomodation_room_id =?,accomodation_check_out_date =? WHERE accomodation_room_id =?";
     $stmt = $mysqli->prepare($query);
-    $rc = $stmt->bind_param('sss',  $reservation_date, $reservation_details, $reservation_id);
+    $rc = $stmt->bind_param('ssss',  $accomodation_check_indate, $accomodation_room_id, $accomodation_check_out_date, $accomodation_room_id);
     $stmt->execute();
     if ($stmt) {
-        $success = "Reservation Updated";
+        $success = "Accomodation Updated";
     } else {
         $info = "Please Try Again Or Try Later";
     }
@@ -42,22 +43,29 @@ require_once('partials/head.php');
     <?php
     require_once('partials/sidebar.php');
     $view = $_GET['view'];
-    $ret = "SELECT * FROM reservations r INNER JOIN 
-    users u ON u.user_id = r.reservation_user_id  WHERE reservation_id = '$view'";
+    $ret = "SELECT * FROM accomodations a INNER JOIN 
+    users u ON u.user_id = a.accomodation_user_id 
+    INNER JOIN rooms r ON r.room_id = a.accomodation_room_id
+    WHERE a.accomodation_id = '$view'";
     $stmt = $mysqli->prepare($ret);
     $stmt->execute(); //ok
     $res = $stmt->get_result();
     while ($reservation = $res->fetch_object()) {
+        $checkin = strtotime($reservation->accomodation_check_indate);
+        $checkout = strtotime($reservation->accomodation_check_out_date);
+        $days_reserved = $checkout - $checkin;
+        round($days_reserved / (60 * 60 * 24));
+        $daysreserved = abs(round($days_reserved / (60 * 60 * 24)));
     ?>
         <section class="content profile-page">
             <div class="container-fluid">
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-7">
-                            <h2><?php echo $reservation->user_name; ?> Museum Visit Reservation Details</h2>
+                            <h2><?php echo $reservation->user_name; ?> Museum Room Reservation Details</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="home">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="reservations">Reservations</a></li>
+                                <li class="breadcrumb-item"><a href="room_bookings">Reservations</a></li>
                                 <li class="breadcrumb-item active">Details</li>
                             </ul>
                         </div>
@@ -70,16 +78,15 @@ require_once('partials/head.php');
                             <div class="profile-header">
                                 <div class="profile_info">
                                     <div class="profile-image"> <img src="assets/images/reservation.png" alt=""> </div>
-                                    <h4 class="mb-0"><strong><?php echo $reservation->user_name; ?> Museum Visit Reservation</strong></h4>
-                                    <span class="">Visit Date: <?php echo date('d, M Y', strtotime($reservation->reservation_date)); ?></span><br>
-                                    <span class="">Payment Status: <?php echo $reservation->reservation_payment_status; ?></span><br>
-                                    <span class="">Approval Status: <?php echo $reservation->reservation_status; ?></span><br>
-                                    <hr>
-                                    <span class="">
-                                        Reservation Details:
-                                        <br>
-                                        <?php echo $reservation->reservation_details; ?>
-                                    </span>
+                                    <h4 class="mb-0"><strong><?php echo $reservation->user_name; ?> Room Reservation</strong></h4>
+                                    <span class="">Check In : <?php echo date('d, M Y', strtotime($reservation->accomodation_check_indate)); ?></span><br>
+                                    <span class="">Check Out : <?php echo date('d, M Y', strtotime($reservation->accomodation_check_out_date)); ?></span><br>
+                                    <span class="">Payment Status: <?php echo $reservation->accomodation_payment_status; ?></span><br>
+                                    <span class="">Booked Room Number: <?php echo $reservation->room_number; ?></span><br>
+                                    <span class="">Booked Room Type: <?php echo $reservation->room_type; ?></span><br>
+                                    <span class="">Booked Room Rate: Ksh <?php echo $reservation->room_rate; ?></span><br>
+                                    <span class="">Days Booked: <?php echo $daysreserved; ?> Day(s)</span><br>
+                                    <span class="">Reservation Amount: Ksh <?php echo ($daysreserved) * ($reservation->room_rate); ?> </span><br>
                                 </div>
                             </div>
                         </div>
@@ -91,17 +98,19 @@ require_once('partials/head.php');
                             <div class="body">
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#reservation_update">Update Reservation</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#reservation_payment">Reservation Payment Record</a></li>
+                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#reservation_update">Update Booking</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#reservation_payment">Booking Payment Record</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_reservation">Cancel Reservation</a></li>
 
                                     <?php
                                     $user_access_level = $_SESSION['user_access_level'];
                                     /* Only Show This If Access Level Is Admin */
                                     if ($user_access_level == 'Administrator') {
-                                        if ($reservation->reservation_status != 'Approved') {
+                                        if ($reservation->room_status == 'Occupied') {
+
+
                                     ?>
-                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#approve_reservation">Approve Reservation</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#vacate_room">Vacate Room</a></li>
                                         <?php } ?>
                                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#delete_reservation">Delete Reservation</a></li>
                                     <?php } ?>
@@ -114,22 +123,31 @@ require_once('partials/head.php');
                                             <form method="POST">
                                                 <div class="modal-body">
                                                     <div class="row clearfix">
-                                                        <div class="col-sm-12">
+                                                        <div class="col-sm-6">
                                                             <div class="form-group">
-                                                                <label>Reservation Visit Date</label>
+                                                                <label>Room Number</label>
                                                                 <div class="form-line">
-                                                                    <input type="date" value="<?php echo $reservation->reservation_date; ?>" name="reservation_date" required class="form-control" />
-                                                                    <!-- Hide This -->
-                                                                    <input type="hidden" value="<?php echo $reservation->reservation_id; ?>" name="reservation_id" required class="form-control" />
-
+                                                                    <select readonly type="text" name="accomodation_room_id" required class="form-control show-tick">
+                                                                        <option value="<?php echo $reservation->room_id; ?>"><?php echo $reservation->room_number; ?></option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12">
+                                                        <div class="col-sm-6">
                                                             <div class="form-group">
-                                                                <label>Reservation Visit Details (Indicate Places You Want To Visit)</label>
+                                                                <label>Check In Date</label>
                                                                 <div class="form-line">
-                                                                    <textarea type="text" rows="5" name="reservation_details" class="form-control no-resize auto-growth" required /><?php echo $reservation->reservation_details; ?></textarea>
+                                                                    <input type="date" value="<?php echo $reservation->accomodation_check_indate; ?>" name="accomodation_check_indate" required class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Check In Out</label>
+                                                                <div class="form-line">
+                                                                    <input type="date" value="<?php echo $reservation->accomodation_check_out_date; ?>" name="accomodation_check_out_date" required class="form-control" />
+                                                                    <!-- Hide This -->
+                                                                    <input type="hidden" value="<?php echo $reservation->accomodation_id; ?>" name="accomodation_id" required class="form-control" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -148,7 +166,7 @@ require_once('partials/head.php');
                                             <div class="card">
                                                 <div id="print">
                                                     <div class="header text-center">
-                                                        <h2>Museum Visit Reservation Payment Receipt</h2>
+                                                        <h2>Museum Guest Room Reservation Payment Receipt</h2>
                                                         <h4>Receipt # <strong><?php echo $b; ?></strong>
                                                         </h4>
                                                     </div>
@@ -163,15 +181,9 @@ require_once('partials/head.php');
                                                                 </address>
                                                             </div>
                                                             <div class="col-md-6 col-sm-6 text-right">
-                                                                <p><strong>Reservation Visit Date: </strong> <?php echo date('M, d Y', strtotime($reservation->reservation_date)); ?></p>
-                                                                <p class="m-t-10"><strong>Approval Status: </strong>
-                                                                    <?php if ($reservation->reservation_status == 'Pending') { ?>
-                                                                        <span class="badge bg-orange">Pending</span>
-                                                                    <?php } else {
-                                                                    ?>
-                                                                        <span class="badge bg-success">Approved</span>
-                                                                    <?php  } ?>
-                                                                </p>
+                                                                <p><strong>Check In Date: </strong><?php echo date('d, M Y', strtotime($reservation->accomodation_check_indate)); ?></p>
+                                                                <p><strong>Check Out Date: </strong><?php echo date('d, M Y', strtotime($reservation->accomodation_check_out_date)); ?></p>
+                                                                <p><strong>Room Number: </strong><?php echo $reservation->room_number; ?></p>
                                                             </div>
                                                         </div>
                                                         <div class="mt-40"></div>
@@ -210,6 +222,10 @@ require_once('partials/head.php');
                                                             <div class="row" style="border-radius: 0px;">
                                                                 <div class="col-md-12 text-right">
                                                                     <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment_details->payment_amount; ?></p>
+                                                                    <p class="text-right">Room Rate : <?php echo $reservation->room_rate; ?></p>
+                                                                    <p class="text-right">Days Booked: <?php echo $daysreserved; ?>
+
+                                                                    </p>
                                                                     <hr>
                                                                     <h3 class="text-right">Ksh: <?php echo $payment_details->payment_amount; ?></h3>
                                                                 </div>
@@ -226,30 +242,13 @@ require_once('partials/head.php');
                                         </div>
                                     </div>
 
-                                    <div role="tabpanel" class="tab-pane" id="approve_reservation">
-                                        <div class="row clearfix">
-                                            <div class="modal-body">
-                                                <div class="row clearfix">
-                                                    <br>
-                                                    <h2 class="text-danger text-center">
-                                                        Heads Up!, you are about to approve this reservation record.
-                                                    </h2>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#approve">Approve Reservation</button>
-                                        </div>
-                                    </div>
-
                                     <div role="tabpanel" class="tab-pane" id="delete_reservation">
                                         <div class="row clearfix">
                                             <div class="modal-body">
                                                 <div class="row clearfix">
                                                     <br>
                                                     <h2 class="text-danger text-center">
-                                                        Heads Up!, you are about to cancel your reservation.
+                                                        Heads Up!, you are about to cancel this reservation record.
                                                     </h2>
                                                 </div>
                                             </div>
@@ -257,6 +256,23 @@ require_once('partials/head.php');
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete_modal">Cancel Reservation</button>
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="vacate_room">
+                                        <div class="row clearfix">
+                                            <div class="modal-body">
+                                                <div class="row clearfix">
+                                                    <br>
+                                                    <h2 class="text-danger text-center">
+                                                        Heads Up!, you are about to vacate a guest in room number : <?php echo $reservation->room_number; ?>.
+                                                    </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacate_modal">Vacate Guest</button>
                                         </div>
                                     </div>
 
@@ -282,11 +298,74 @@ require_once('partials/head.php');
                         <br>
                         <p>Heads Up, You are about to cancel this reservation record, This action is irrevisble.</p>
                         <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
-                        <a href="reservations?delete=<?php echo $reservation->reservation_id; ?>" class="text-center btn btn-danger"> Cancel </a>
+                        <a href="room_booking?delete=<?php echo $reservation->accomodation_id; ?>&room=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Cancel Reservation </a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Vacate Room Modal -->
+        <div class="modal fade" id="vacate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">CONFIRM</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center text-danger">
+                        <h4>Vacate Guest In Room Number : <?php echo $reservation->room_number; ?></h4>
+                        <br>
+                        <p>Heads Up, You are about to vacate <?php echo $reservation->user_name; ?>.</p>
+                        <button type="button" class="text-center btn btn-success" data-dismiss="modal">No</button>
+                        <a href="modules_bookings_accomodation?view=<?php echo $reservation->accomodation_id; ?>&vacate=<?php echo $reservation->room_id; ?>" class="text-center btn btn-danger"> Vacate </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pay Reservation -->
+        <div class="modal fade" id="pay_reservation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">RESERVATION PAYMENT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Accomodation Amount (Ksh)</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_amount" value="<?php echo ($daysreserved) * ($reservation->room_rate); ?>" required class="form-control" />
+                                            <!-- Hide This -->
+                                            <input type="hidden" name="payment_user_id" value="<?php echo $reservation->accomodation_user_id; ?>" required class="form-control" />
+                                            <input type="hidden" name="payment_service_paid_id" value="<?php echo $view; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Payment Confirmation Codes</label>
+                                        <div class="form-line">
+                                            <input type="text" name="payment_confirmation_code" value="<?php echo $sys_gen_paycode; ?>" required class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="Pay_Reservation" class="btn btn-link waves-effect">SAVE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <?php } ?>
     <?php require_once('partials/scripts.php'); ?>
 </body>
