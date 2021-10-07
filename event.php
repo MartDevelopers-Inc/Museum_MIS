@@ -119,7 +119,93 @@ require_once('partials/head.php');
                                 <div class="tab-content">
 
                                     <div role="tabpanel" class="tab-pane active" id="ticket_purchases">
+                                        <?php
+                                        $ret = "SELECT * FROM tickets t
+                                        INNER JOIN events e ON t.ticket_event_id = e.event_id
+                                        INNER JOIN users s ON s.user_id = t.ticket_user_id
+                                        WHERE e.event_id = '$view'";
+                                        $stmt = $mysqli->prepare($ret);
+                                        $stmt->execute(); //ok
+                                        $res = $stmt->get_result();
+                                        while ($ticket = $res->fetch_object()) { 
+                                             $paid_ticket = $ticket->ticket_id;
 
+                                            ?>
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                                <div class="card">
+                                                    <div id="print">
+                                                        <div class="header text-center">
+                                                            <h2>Museum Event Ticket</h2>
+                                                            <h4>Ticket # <strong><?php echo $b; ?></strong>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="body">
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <address>
+                                                                        <strong><?php echo $ticket->user_name; ?></strong><br>
+                                                                        Email: <?php echo $ticket->user_email; ?><br>
+                                                                        <abbr title="Phone">P:</abbr> <?php echo $ticket->user_phone; ?>
+                                                                    </address>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6 text-right">
+                                                                    <p><strong>Event Date : </strong><?php echo date('d, M Y', strtotime($ticket->event_date)); ?></p>
+                                                                    <p><strong>Date Purchased : </strong><?php echo $ticket->ticket_purchased_on; ?></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-40"></div>
+                                                            <?php
+                                                            /* Load Payment Record Related To This Reservation */
+                                                            $ret = "SELECT * FROM payments  WHERE payment_service_paid_id = '$paid_ticket'";
+                                                            $stmt = $mysqli->prepare($ret);
+                                                            $stmt->execute(); //ok
+                                                            $res = $stmt->get_result();
+                                                            while ($payment_details = $res->fetch_object()) {
+                                                            ?>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="table-responsive">
+                                                                            <table id="mainTable" class="table table-striped" style="cursor: pointer;">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Payment Amount</th>
+                                                                                        <th>Confirmation Code</th>
+                                                                                        <th>Date Paid</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+
+                                                                                    <tr>
+                                                                                        <td>Ksh <?php echo $payment_details->payment_amount; ?></td>
+                                                                                        <td><?php echo $payment_details->payment_confirmation_code; ?></td>
+                                                                                        <td><?php echo date('M, d Y', strtotime($payment_details->payment_created_at)); ?></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row" style="border-radius: 0px;">
+                                                                    <div class="col-md-12 text-right">
+                                                                        <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment_details->payment_amount; ?></p>
+                                                                        </p>
+                                                                        <hr>
+                                                                        <h3 class="text-right">Ksh: <?php echo $payment_details->payment_amount; ?></h3>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                            <hr>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="hidden-print col-md-12 text-right">
+                                                        <button id="print" onclick="printContent('print');" class="btn btn-raised btn-success"><i class="zmdi zmdi-print"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
