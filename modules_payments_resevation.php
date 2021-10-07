@@ -71,7 +71,7 @@ require_once('partials/head.php');
                                     <span class="">
                                         Reservation Details:
                                         <br>
-                                        <?php echo $reservation->reservation_details; ?>
+                                        <?php echo $payment->reservation_details; ?>
                                     </span>
                                 </div>
                             </div>
@@ -117,9 +117,9 @@ require_once('partials/head.php');
                                                                 </address>
                                                             </div>
                                                             <div class="col-md-6 col-sm-6 text-right">
-                                                                <p><strong>Reservation Visit Date: </strong> <?php echo date('M, d Y', strtotime($reservation->reservation_date)); ?></p>
+                                                                <p><strong>Reservation Visit Date: </strong> <?php echo date('M, d Y', strtotime($payment->reservation_date)); ?></p>
                                                                 <p class="m-t-10"><strong>Approval Status: </strong>
-                                                                    <?php if ($reservation->reservation_status == 'Pending') { ?>
+                                                                    <?php if ($payment->reservation_status == 'Pending') { ?>
                                                                         <span class="badge bg-orange">Pending</span>
                                                                     <?php } else {
                                                                     ?>
