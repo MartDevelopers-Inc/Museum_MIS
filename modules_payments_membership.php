@@ -23,11 +23,12 @@ require_once('partials/head.php');
     <?php
     require_once('partials/sidebar.php');
     $view = $_GET['view'];
+    $payment_service_id = $_GET['service'];
     $ret = "SELECT * FROM payments p
-    INNER JOIN user_membership_package ump ON p.payment_service_paid_id = ump.user_membership_package_id
-    INNER JOIN users u ON u.user_id = ump.user_membership_package_user_id
+    INNER JOIN user_membership_package ump ON  ump.user_membership_package_id = p.payment_service_paid_id 
+    INNER JOIN users u ON u.user_id = p.payment_user_id
     INNER JOIN membership_packages mp ON mp.package_id = ump.user_membership_package_package_id
-    WHERE payment_id = '$view' ";
+    WHERE p.payment_id = '$view' AND p.payment_service_paid_id = '$payment_service_id' ";
     $stmt = $mysqli->prepare($ret);
     $stmt->execute(); //ok
     $res = $stmt->get_result();
@@ -59,7 +60,6 @@ require_once('partials/head.php');
                         <div class="boxs-simple">
                             <div class="profile-header">
                                 <div class="profile_info">
-                                    <div class="profile-image"> <img src="assets/images/Membership_Package.png" alt=""> </div>
                                     <div class="profile-image"> <img src="<?php echo $url; ?>" alt=""> </div>
                                     <h4 class="mb-0"><strong><?php echo $payment->user_name; ?></strong></h4>
                                     <span class="">Email: <?php echo $payment->user_email;  ?></span><br>
@@ -93,7 +93,67 @@ require_once('partials/head.php');
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="get_receipt">
                                         <div class="wrap-reset">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                                <div class="card">
+                                                    <div id="print">
+                                                        <div class="header text-center">
+                                                            <h2>Museum <?php echo $payment->package_name; ?> Membership Package Payment Receipt</h2>
+                                                            <h4>Receipt # <strong><?php echo $b; ?></strong>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="body">
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <address>
+                                                                        <strong><?php echo $payment->user_name; ?></strong><br>
+                                                                        Email: <?php echo $payment->user_email; ?><br>
+                                                                        <abbr title="Phone">P:</abbr> <?php echo $payment->user_phone; ?>
+                                                                    </address>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-40"></div>
 
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="table-responsive">
+                                                                        <table id="mainTable" class="table table-striped" style="cursor: pointer;">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Payment Amount</th>
+                                                                                    <th>Confirmation Code</th>
+                                                                                    <th>Date Paid</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                <tr>
+                                                                                    <td>Ksh <?php echo $payment->payment_amount; ?></td>
+                                                                                    <td><?php echo $payment->payment_confirmation_code; ?></td>
+                                                                                    <td><?php echo date('M, d Y', strtotime($payment->payment_created_at)); ?></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="border-radius: 0px;">
+                                                                <div class="col-md-12 text-right">
+                                                                    <p class="text-right"><b>Sub-total:</b> Ksh: <?php echo $payment->payment_amount; ?></p>
+                                                                    <hr>
+                                                                    <h3 class="text-right">Ksh: <?php echo $payment->payment_amount; ?></h3>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="hidden-print col-md-12 text-right">
+                                                        <button id="print" onclick="printContent('print');" class="btn btn-raised btn-success"><i class="zmdi zmdi-print"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
