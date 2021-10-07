@@ -56,9 +56,9 @@
                 </li>
                 <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-money-box"></i><span>Payments</span> </a>
                     <ul class="ml-menu">
-                        <li> <a href="modules_events_tickets">Memberships</a></li>
-                        <li> <a href="modules_events_tickets">Accomodations</a></li>
-                        <li> <a href="modules_events_tickets">Tickets</a></li>
+                        <li> <a href="modules_payments_memberships">Memberships</a></li>
+                        <li> <a href="modules_payments_accomodations">Accomodations</a></li>
+                        <li> <a href="modules_payments_tickets">Tickets</a></li>
                     </ul>
                 </li>
                 <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment"></i><span>Reports</span> </a>
