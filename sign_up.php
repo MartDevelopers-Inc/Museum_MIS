@@ -75,6 +75,7 @@ require_once('partials/head.php');
                                     <label class="form-label">Full Name</label>
                                 </div>
                             </div>
+                            
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <input type="email" name="user_email" required class="form-control">
