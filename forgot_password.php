@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once('../config/config.php');
-require_once('../config/codeGen.php');
+require_once('config/config.php');
+require_once('config/codeGen.php');
 
 /* Reset Password */
 if (isset($_POST['Reset_Password'])) {
 
     $user_email = $_POST['user_email'];
-    $query = mysqli_query($mysqli, "SELECT * FROM `users` WHERE user_mail = '" . $user_email . "' ");
+    $query = mysqli_query($mysqli, "SELECT * FROM `users` WHERE user_email = '" . $user_email . "' ");
     $num_rows = mysqli_num_rows($query);
 
     if ($num_rows > 0) {
@@ -56,7 +56,7 @@ require_once('partials/head.php');
                                 </div>
                             </div>
 
-                            <button type="submit" name="Sign_In" class="btn btn-raised waves-effect bg-red">SIGN IN</button>
+                            <button type="submit" name="Reset_Password" class="btn btn-raised waves-effect bg-red">RESET PASSWORD</button>
                             <div class="text-left">
                                 <a href="login">Remember password?</a>
                             </div>

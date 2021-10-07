@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('../config/config.php');
-require_once('../config/codeGen.php');
+require_once('config/config.php');
+require_once('config/codeGen.php');
 
 /* Reset Password */
 if (isset($_POST['Confirm_Password'])) {
